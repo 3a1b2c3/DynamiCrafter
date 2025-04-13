@@ -20,7 +20,9 @@ from torch.optim.lr_scheduler import LambdaLR, CosineAnnealingLR
 from torchvision.utils import make_grid
 import pytorch_lightning as pl
 from pytorch_lightning.utilities import rank_zero_only
-from utils.utils import instantiate_from_config
+import sys
+sys.path.append(r"C:\workspace\cs231n\proj\DynamiCrafter")
+#from utils.utils import instantiate_from_config
 from lvdm.ema import LitEma
 from lvdm.models.samplers.ddim import DDIMSampler
 from lvdm.distributions import DiagonalGaussianDistribution
@@ -32,6 +34,25 @@ from lvdm.common import (
     exists,
     default
 )
+import importlib 
+
+def instantiate_from_config(config):
+    if not "target" in config:
+        if config == '__is_first_stage__':
+            return None
+        elif config == "__is_unconditional__":
+            return None
+        raise KeyError("Expected key `target` to instantiate.")
+    return get_obj_from_str(config["target"])(**config.get("params", dict()))
+
+
+def get_obj_from_str(string, reload=False):
+    module, cls = string.rsplit(".", 1)
+    if reload:
+        module_imp = importlib.import_module(module)
+        importlib.reload(module_imp)
+    return getattr(importlib.import_module(module, package=None), cls)
+
 
 __conditioning_keys__ = {'concat': 'c_concat',
                          'crossattn': 'c_crossattn',
