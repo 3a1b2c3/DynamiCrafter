@@ -92,4 +92,8 @@ def normal_kl(mean1, logvar1, mean2, logvar2):
         - logvar1
         + torch.exp(logvar1 - logvar2)
         + ((mean1 - mean2) ** 2) * torch.exp(-logvar2)
+<<<<<<< HEAD
     )
+=======
+    )
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

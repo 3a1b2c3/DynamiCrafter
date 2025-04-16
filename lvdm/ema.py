@@ -73,4 +73,8 @@ class LitEma(nn.Module):
             updated with the stored parameters.
         """
         for c_param, param in zip(self.collected_params, parameters):
+<<<<<<< HEAD
             param.data.copy_(c_param.data)
+=======
+            param.data.copy_(c_param.data)
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

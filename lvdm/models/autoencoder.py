@@ -216,4 +216,8 @@ class IdentityFirstStage(torch.nn.Module):
         return x
 
     def forward(self, x, *args, **kwargs):
+<<<<<<< HEAD
         return x
+=======
+        return x
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

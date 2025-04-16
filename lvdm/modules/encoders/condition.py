@@ -1,12 +1,22 @@
 import torch
 import torch.nn as nn
+<<<<<<< HEAD
 from torch.utils.checkpoint import checkpoint
 import kornia
 import open_clip
+=======
+import kornia
+import open_clip
+from torch.utils.checkpoint import checkpoint
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 from transformers import T5Tokenizer, T5EncoderModel, CLIPTokenizer, CLIPTextModel
 from lvdm.common import autocast
 from utils.utils import count_params
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 class AbstractEncoder(nn.Module):
     def __init__(self):
         super().__init__()
@@ -16,7 +26,10 @@ class AbstractEncoder(nn.Module):
 
 
 class IdentityEncoder(AbstractEncoder):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     def encode(self, x):
         return x
 
@@ -185,7 +198,11 @@ class FrozenOpenCLIPEmbedder(AbstractEncoder):
                  freeze=True, layer="last"):
         super().__init__()
         assert layer in self.LAYERS
+<<<<<<< HEAD
         model, _, _ = open_clip.create_model_and_transforms(arch, device=torch.device('cpu'))
+=======
+        model, _, _ = open_clip.create_model_and_transforms(arch, device=torch.device('cpu'), pretrained=version)
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         del model.visual
         self.model = model
 
@@ -207,8 +224,12 @@ class FrozenOpenCLIPEmbedder(AbstractEncoder):
             param.requires_grad = False
 
     def forward(self, text):
+<<<<<<< HEAD
         self.device = self.model.positional_embedding.device
         tokens = open_clip.tokenize(text)
+=======
+        tokens = open_clip.tokenize(text) ## all clip models use 77 as context length
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         z = self.encode_with_transformer(tokens.to(self.device))
         return z
 
@@ -247,7 +268,11 @@ class FrozenOpenCLIPImageEmbedder(AbstractEncoder):
                                                             pretrained=version, )
         del model.transformer
         self.model = model
+<<<<<<< HEAD
 
+=======
+        # self.mapper = torch.nn.Linear(1280, 1024)
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         self.device = device
         self.max_length = max_length
         if freeze:
@@ -275,9 +300,15 @@ class FrozenOpenCLIPImageEmbedder(AbstractEncoder):
 
     def freeze(self):
         self.model = self.model.eval()
+<<<<<<< HEAD
         for param in self.parameters():
             param.requires_grad = False
 
+=======
+        for param in self.model.parameters():
+            param.requires_grad = False
+    
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     @autocast
     def forward(self, image, no_dropout=False):
         z = self.encode_with_vision_transformer(image)
@@ -293,8 +324,11 @@ class FrozenOpenCLIPImageEmbedder(AbstractEncoder):
     def encode(self, text):
         return self(text)
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 class FrozenOpenCLIPImageEmbedderV2(AbstractEncoder):
     """
     Uses the OpenCLIP vision transformer encoder for images
@@ -317,6 +351,10 @@ class FrozenOpenCLIPImageEmbedderV2(AbstractEncoder):
             self.layer_idx = 1
 
         self.antialias = antialias
+<<<<<<< HEAD
+=======
+
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         self.register_buffer('mean', torch.Tensor([0.48145466, 0.4578275, 0.40821073]), persistent=False)
         self.register_buffer('std', torch.Tensor([0.26862954, 0.26130258, 0.27577711]), persistent=False)
 
@@ -336,7 +374,11 @@ class FrozenOpenCLIPImageEmbedderV2(AbstractEncoder):
         for param in self.model.parameters():
             param.requires_grad = False
 
+<<<<<<< HEAD
     def forward(self, image, no_dropout=False):
+=======
+    def forward(self, image, no_dropout=False): 
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         ## image: b c h w
         z = self.encode_with_vision_transformer(image)
         return z
@@ -373,7 +415,10 @@ class FrozenOpenCLIPImageEmbedderV2(AbstractEncoder):
 
         return x
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 class FrozenCLIPT5Encoder(AbstractEncoder):
     def __init__(self, clip_version="openai/clip-vit-large-patch14", t5_version="google/t5-v1_1-xl", device="cuda",
                  clip_max_length=77, t5_max_length=77):
@@ -389,4 +434,8 @@ class FrozenCLIPT5Encoder(AbstractEncoder):
     def forward(self, text):
         clip_z = self.clip_encoder.encode(text)
         t5_z = self.t5_encoder.encode(text)
+<<<<<<< HEAD
         return [clip_z, t5_z]
+=======
+        return [clip_z, t5_z]
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

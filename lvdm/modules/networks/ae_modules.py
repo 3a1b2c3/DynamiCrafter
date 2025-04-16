@@ -841,5 +841,9 @@ class FirstStagePostProcessor(nn.Module):
 
         if self.do_reshape:
             z = rearrange(z,'b c h w -> b (h w) c')
+<<<<<<< HEAD
         return z
 
+=======
+        return z
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
