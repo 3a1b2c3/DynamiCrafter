@@ -636,4 +636,9 @@ class TransformerWrapper(nn.Module):
             attn_maps = list(map(lambda t: t.post_softmax_attn, intermediates.attn_intermediates))
             return out, attn_maps
 
+<<<<<<< HEAD
         return out
+
+=======
+        return out
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

@@ -1,0 +1,24 @@
+name="base_512_test"
+
+ckpt='checkpoints/base_512_v2/model.ckpt'
+config='configs/inference_t2v_tconv512_v2.0_freenoise.yaml'
+
+prompt_file="prompts/mp_prompts.txt"
+res_dir="results_freenoise_mp_512"
+
+python3 scripts/evaluation/inference_freenoise_mp.py \
+--seed 123 \
+--mode 'base' \
+--ckpt_path $ckpt \
+--config $config \
+--savedir $res_dir/$name \
+--n_samples 3 \
+--bs 1 --height 320 --width 512 \
+--unconditional_guidance_scale 12.0 \
+--ddim_steps 50 \
+--ddim_eta 0.0 \
+--prompt_file $prompt_file \
+--fps 16 \
+--frames 64 \
+--window_size 16 \
+--window_stride 4 

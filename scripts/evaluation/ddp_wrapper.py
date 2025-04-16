@@ -42,6 +42,10 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
     rank, gpu_num = get_dist_info()
 
+<<<<<<< HEAD
+    print("@CoLVDM Inference [rank%d]: %s"%(rank, now))
+=======
     # inference_args.savedir = inference_args.savedir+str('_seed')+str(inference_args.seed)
     print("@DynamiCrafter Inference [rank%d]: %s"%(rank, now))
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     inference_api.run_inference(inference_args, gpu_num, rank)

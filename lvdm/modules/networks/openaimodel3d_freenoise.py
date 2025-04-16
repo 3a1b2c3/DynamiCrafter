@@ -13,7 +13,7 @@ from lvdm.basics import (
     avg_pool_nd,
     normalization
 )
-from lvdm.modules.attention import SpatialTransformer, TemporalTransformer
+from lvdm.modules.attention_freenoise import SpatialTransformer, TemporalTransformer
 
 
 class TimestepBlock(nn.Module):
@@ -33,26 +33,18 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
     support it as an extra input.
     """
 
-    def forward(self, x, emb, context=None, batch_size=None):
+    def forward(self, x, emb, context=None, batch_size=None, use_injection=False, **kwargs):
         for layer in self:
             if isinstance(layer, TimestepBlock):
-<<<<<<< HEAD
                 x = layer(x, emb, batch_size)
-=======
-                x = layer(x, emb, batch_size=batch_size)
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
             elif isinstance(layer, SpatialTransformer):
-                x = layer(x, context)
+                x = layer(x, context, use_injection=use_injection)
             elif isinstance(layer, TemporalTransformer):
                 x = rearrange(x, '(b f) c h w -> b c f h w', b=batch_size)
-                x = layer(x, context)
+                x = layer(x, context, **kwargs)
                 x = rearrange(x, 'b c f h w -> (b f) c h w')
             else:
-<<<<<<< HEAD
                 x = layer(x,)
-=======
-                x = layer(x)
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         return x
 
 
@@ -127,11 +119,6 @@ class ResBlock(TimestepBlock):
     :param dims: determines if the signal is 1D, 2D, or 3D.
     :param up: if True, use this block for upsampling.
     :param down: if True, use this block for downsampling.
-<<<<<<< HEAD
-=======
-    :param use_temporal_conv: if True, use the temporal convolution.
-    :param use_image_dataset: if True, the temporal parameters will not be optimized.
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     """
 
     def __init__(
@@ -205,32 +192,20 @@ class ResBlock(TimestepBlock):
                 spatial_aware=tempspatial_aware
             )
 
-<<<<<<< HEAD
     def forward(self, x, emb,  batch_size=None):
-=======
-    def forward(self, x, emb, batch_size=None):
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         """
         Apply the block to a Tensor, conditioned on a timestep embedding.
         :param x: an [N x C x ...] Tensor of features.
         :param emb: an [N x emb_channels] Tensor of timestep embeddings.
         :return: an [N x C x ...] Tensor of outputs.
         """
-<<<<<<< HEAD
         input_tuple = (x, emb,)
-=======
-        input_tuple = (x, emb)
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         if batch_size:
             forward_batchsize = partial(self._forward, batch_size=batch_size)
             return checkpoint(forward_batchsize, input_tuple, self.parameters(), self.use_checkpoint)
         return checkpoint(self._forward, input_tuple, self.parameters(), self.use_checkpoint)
 
-<<<<<<< HEAD
     def _forward(self, x, emb,  batch_size=None,):
-=======
-    def _forward(self, x, emb, batch_size=None):
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         if self.updown:
             in_rest, in_conv = self.in_layers[:-1], self.in_layers[-1]
             h = in_rest(x)
@@ -251,11 +226,7 @@ class ResBlock(TimestepBlock):
             h = h + emb_out
             h = self.out_layers(h)
         h = self.skip_connection(x) + h
-<<<<<<< HEAD
         
-=======
-
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         if self.use_temporal_conv and batch_size:
             h = rearrange(h, '(b t) c h w -> b c t h w', b=batch_size)
             h = self.temopral_conv(h)
@@ -267,30 +238,19 @@ class TemporalConvBlock(nn.Module):
     """
     Adapted from modelscope: https://github.com/modelscope/modelscope/blob/master/modelscope/models/multi_modal/video_synthesis/unet_sd.py
     """
-<<<<<<< HEAD
 
-=======
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     def __init__(self, in_channels, out_channels=None, dropout=0.0, spatial_aware=False):
         super(TemporalConvBlock, self).__init__()
         if out_channels is None:
             out_channels = in_channels
         self.in_channels = in_channels
         self.out_channels = out_channels
-<<<<<<< HEAD
         kernel_shape = (3, 1, 1) if not spatial_aware else (3, 3, 3)
         padding_shape = (1, 0, 0) if not spatial_aware else (1, 1, 1)
-=======
-        th_kernel_shape = (3, 1, 1) if not spatial_aware else (3, 3, 1)
-        th_padding_shape = (1, 0, 0) if not spatial_aware else (1, 1, 0)
-        tw_kernel_shape = (3, 1, 1) if not spatial_aware else (3, 1, 3)
-        tw_padding_shape = (1, 0, 0) if not spatial_aware else (1, 0, 1)
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
         # conv layers
         self.conv1 = nn.Sequential(
             nn.GroupNorm(32, in_channels), nn.SiLU(),
-<<<<<<< HEAD
             nn.Conv3d(in_channels, out_channels, kernel_shape, padding=padding_shape))
         self.conv2 = nn.Sequential(
             nn.GroupNorm(32, out_channels), nn.SiLU(), nn.Dropout(dropout),
@@ -301,18 +261,6 @@ class TemporalConvBlock(nn.Module):
         self.conv4 = nn.Sequential(
             nn.GroupNorm(32, out_channels), nn.SiLU(), nn.Dropout(dropout),
             nn.Conv3d(out_channels, in_channels, (3, 1, 1), padding=(1, 0, 0)))
-=======
-            nn.Conv3d(in_channels, out_channels, th_kernel_shape, padding=th_padding_shape))
-        self.conv2 = nn.Sequential(
-            nn.GroupNorm(32, out_channels), nn.SiLU(), nn.Dropout(dropout),
-            nn.Conv3d(out_channels, in_channels, tw_kernel_shape, padding=tw_padding_shape))
-        self.conv3 = nn.Sequential(
-            nn.GroupNorm(32, out_channels), nn.SiLU(), nn.Dropout(dropout),
-            nn.Conv3d(out_channels, in_channels, th_kernel_shape, padding=th_padding_shape))
-        self.conv4 = nn.Sequential(
-            nn.GroupNorm(32, out_channels), nn.SiLU(), nn.Dropout(dropout),
-            nn.Conv3d(out_channels, in_channels, tw_kernel_shape, padding=tw_padding_shape))
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
         # zero out the last layer params,so the conv block is identity
         nn.init.zeros_(self.conv4[-1].weight)
@@ -325,12 +273,8 @@ class TemporalConvBlock(nn.Module):
         x = self.conv3(x)
         x = self.conv4(x)
 
-<<<<<<< HEAD
         return x + identity
 
-=======
-        return identity + x
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
 class UNetModel(nn.Module):
     """
@@ -358,11 +302,6 @@ class UNetModel(nn.Module):
                                of heads for upsampling. Deprecated.
     :param use_scale_shift_norm: use a FiLM-like conditioning mechanism.
     :param resblock_updown: use residual blocks for up/downsampling.
-<<<<<<< HEAD
-=======
-    :param use_new_attention_order: use a different attention pattern for potentially
-                                    increased efficiency.
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     """
 
     def __init__(self,
@@ -386,26 +325,15 @@ class UNetModel(nn.Module):
                  temporal_conv=False,
                  tempspatial_aware=False,
                  temporal_attention=True,
-<<<<<<< HEAD
                  temporal_selfatt_only=True,
-=======
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
                  use_relative_position=True,
                  use_causal_attention=False,
                  temporal_length=None,
                  use_fp16=False,
                  addition_attention=False,
-<<<<<<< HEAD
                  use_image_attention=False,
                  temporal_transformer_depth=1,
                  fps_cond=False,
-=======
-                 temporal_selfatt_only=True,
-                 image_cross_attention=False,
-                 image_cross_attention_scale_learnable=False,
-                 default_fs=4,
-                 fs_condition=False,
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
                 ):
         super(UNetModel, self).__init__()
         if num_heads == -1:
@@ -425,46 +353,24 @@ class UNetModel(nn.Module):
         time_embed_dim = model_channels * 4
         self.use_checkpoint = use_checkpoint
         self.dtype = torch.float16 if use_fp16 else torch.float32
-<<<<<<< HEAD
         self.addition_attention=addition_attention
         self.use_image_attention = use_image_attention
         self.fps_cond=fps_cond
 
 
 
-=======
-        temporal_self_att_only = True
-        self.addition_attention = addition_attention
-        self.temporal_length = temporal_length
-        self.image_cross_attention = image_cross_attention
-        self.image_cross_attention_scale_learnable = image_cross_attention_scale_learnable
-        self.default_fs = default_fs
-        self.fs_condition = fs_condition
-
-        ## Time embedding blocks
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         self.time_embed = nn.Sequential(
             linear(model_channels, time_embed_dim),
             nn.SiLU(),
             linear(time_embed_dim, time_embed_dim),
         )
-<<<<<<< HEAD
         if self.fps_cond:
-=======
-        if fs_condition:
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
             self.fps_embedding = nn.Sequential(
                 linear(model_channels, time_embed_dim),
                 nn.SiLU(),
                 linear(time_embed_dim, time_embed_dim),
             )
-<<<<<<< HEAD
 
-=======
-            nn.init.zeros_(self.fps_embedding[-1].weight)
-            nn.init.zeros_(self.fps_embedding[-1].bias)
-        ## Input Block
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         self.input_blocks = nn.ModuleList(
             [
                 TimestepEmbedSequential(conv_nd(dims, in_channels, model_channels, 3, padding=1))
@@ -479,15 +385,9 @@ class UNetModel(nn.Module):
                     depth=transformer_depth,
                     context_dim=context_dim,
                     use_checkpoint=use_checkpoint, only_self_att=temporal_selfatt_only, 
-<<<<<<< HEAD
                     causal_attention=use_causal_attention, relative_position=use_relative_position, 
                     temporal_length=temporal_length))
             
-=======
-                    causal_attention=False, relative_position=use_relative_position, 
-                    temporal_length=temporal_length))
-
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         input_block_chans = [model_channels]
         ch = model_channels
         ds = 1
@@ -510,26 +410,15 @@ class UNetModel(nn.Module):
                     layers.append(
                         SpatialTransformer(ch, num_heads, dim_head, 
                             depth=transformer_depth, context_dim=context_dim, use_linear=use_linear,
-<<<<<<< HEAD
                             use_checkpoint=use_checkpoint, disable_self_attn=False,
-                            img_cross_attention=self.use_image_attention
-=======
-                            use_checkpoint=use_checkpoint, disable_self_attn=False, 
-                            video_length=temporal_length, image_cross_attention=self.image_cross_attention,
-                            image_cross_attention_scale_learnable=self.image_cross_attention_scale_learnable,                      
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
+                            img_cross_attention=self.use_image_attention, injection=True
                         )
                     )
                     if self.temporal_attention:
                         layers.append(
                             TemporalTransformer(ch, num_heads, dim_head,
-<<<<<<< HEAD
                                 depth=temporal_transformer_depth, context_dim=context_dim, use_linear=use_linear,
                                 use_checkpoint=use_checkpoint, only_self_att=temporal_selfatt_only, 
-=======
-                                depth=transformer_depth, context_dim=context_dim, use_linear=use_linear,
-                                use_checkpoint=use_checkpoint, only_self_att=temporal_self_att_only, 
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
                                 causal_attention=use_causal_attention, relative_position=use_relative_position, 
                                 temporal_length=temporal_length
                             )
@@ -566,25 +455,15 @@ class UNetModel(nn.Module):
             ),
             SpatialTransformer(ch, num_heads, dim_head, 
                 depth=transformer_depth, context_dim=context_dim, use_linear=use_linear,
-<<<<<<< HEAD
                 use_checkpoint=use_checkpoint, disable_self_attn=False,
-                img_cross_attention=self.use_image_attention
-=======
-                use_checkpoint=use_checkpoint, disable_self_attn=False, video_length=temporal_length, 
-                image_cross_attention=self.image_cross_attention,image_cross_attention_scale_learnable=self.image_cross_attention_scale_learnable                
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
+                img_cross_attention=self.use_image_attention, injection=True
             )
         ]
         if self.temporal_attention:
             layers.append(
                 TemporalTransformer(ch, num_heads, dim_head,
-<<<<<<< HEAD
                     depth=temporal_transformer_depth, context_dim=context_dim, use_linear=use_linear,
                     use_checkpoint=use_checkpoint, only_self_att=temporal_selfatt_only, 
-=======
-                    depth=transformer_depth, context_dim=context_dim, use_linear=use_linear,
-                    use_checkpoint=use_checkpoint, only_self_att=temporal_self_att_only, 
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
                     causal_attention=use_causal_attention, relative_position=use_relative_position, 
                     temporal_length=temporal_length
                 )
@@ -592,24 +471,12 @@ class UNetModel(nn.Module):
         layers.append(
             ResBlock(ch, time_embed_dim, dropout,
                 dims=dims, use_checkpoint=use_checkpoint,
-<<<<<<< HEAD
                 use_scale_shift_norm=use_scale_shift_norm, tempspatial_aware=tempspatial_aware,
                 use_temporal_conv=temporal_conv
                 )
         )
         self.middle_block = TimestepEmbedSequential(*layers)
 
-=======
-                use_scale_shift_norm=use_scale_shift_norm, tempspatial_aware=tempspatial_aware, 
-                use_temporal_conv=temporal_conv
-                )
-        )
-
-        ## Middle Block
-        self.middle_block = TimestepEmbedSequential(*layers)
-
-        ## Output Block
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         self.output_blocks = nn.ModuleList([])
         for level, mult in list(enumerate(channel_mult))[::-1]:
             for i in range(num_res_blocks + 1):
@@ -631,25 +498,15 @@ class UNetModel(nn.Module):
                     layers.append(
                         SpatialTransformer(ch, num_heads, dim_head, 
                             depth=transformer_depth, context_dim=context_dim, use_linear=use_linear,
-<<<<<<< HEAD
                             use_checkpoint=use_checkpoint, disable_self_attn=False,
-                            img_cross_attention=self.use_image_attention
-=======
-                            use_checkpoint=use_checkpoint, disable_self_attn=False, video_length=temporal_length,
-                            image_cross_attention=self.image_cross_attention,image_cross_attention_scale_learnable=self.image_cross_attention_scale_learnable    
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
+                            img_cross_attention=self.use_image_attention, injection=False
                         )
                     )
                     if self.temporal_attention:
                         layers.append(
                             TemporalTransformer(ch, num_heads, dim_head,
-<<<<<<< HEAD
                                 depth=temporal_transformer_depth, context_dim=context_dim, use_linear=use_linear,
                                 use_checkpoint=use_checkpoint, only_self_att=temporal_selfatt_only, 
-=======
-                                depth=transformer_depth, context_dim=context_dim, use_linear=use_linear,
-                                use_checkpoint=use_checkpoint, only_self_att=temporal_self_att_only, 
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
                                 causal_attention=use_causal_attention, relative_position=use_relative_position, 
                                 temporal_length=temporal_length
                             )
@@ -674,7 +531,6 @@ class UNetModel(nn.Module):
             zero_module(conv_nd(dims, model_channels, out_channels, 3, padding=1)),
         )
 
-<<<<<<< HEAD
     def forward(self, x, timesteps, context=None, features_adapter=None, fps=16, **kwargs):
         t_emb = timestep_embedding(timesteps, self.model_channels, repeat_only=False)
         emb = self.time_embed(t_emb)
@@ -697,46 +553,13 @@ class UNetModel(nn.Module):
         ## always in shape (b t) c h w, except for temporal layer
         x = rearrange(x, 'b c t h w -> (b t) c h w')
 
-=======
-    def forward(self, x, timesteps, context=None, features_adapter=None, fs=None, **kwargs):
-        b,_,t,_,_ = x.shape
-        t_emb = timestep_embedding(timesteps, self.model_channels, repeat_only=False).type(x.dtype)
-        emb = self.time_embed(t_emb)
-        
-        ## repeat t times for context [(b t) 77 768] & time embedding
-        ## check if we use per-frame image conditioning
-        _, l_context, _ = context.shape
-        if l_context == 77 + t*16: ## !!! HARD CODE here
-            context_text, context_img = context[:,:77,:], context[:,77:,:]
-            context_text = context_text.repeat_interleave(repeats=t, dim=0)
-            context_img = rearrange(context_img, 'b (t l) c -> (b t) l c', t=t)
-            context = torch.cat([context_text, context_img], dim=1)
-        else:
-            context = context.repeat_interleave(repeats=t, dim=0)
-        emb = emb.repeat_interleave(repeats=t, dim=0)
-        
-        ## always in shape (b t) c h w, except for temporal layer
-        x = rearrange(x, 'b c t h w -> (b t) c h w')
-
-        ## combine emb
-        if self.fs_condition:
-            if fs is None:
-                fs = torch.tensor(
-                    [self.default_fs] * b, dtype=torch.long, device=x.device)
-            fs_emb = timestep_embedding(fs, self.model_channels, repeat_only=False).type(x.dtype)
-
-            fs_embed = self.fps_embedding(fs_emb)
-            fs_embed = fs_embed.repeat_interleave(repeats=t, dim=0)
-            emb = emb + fs_embed
-
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         h = x.type(self.dtype)
         adapter_idx = 0
         hs = []
         for id, module in enumerate(self.input_blocks):
-            h = module(h, emb, context=context, batch_size=b)
+            h = module(h, emb, context=context, batch_size=b, **kwargs)
             if id ==0 and self.addition_attention:
-                h = self.init_attn(h, emb, context=context, batch_size=b)
+                h = self.init_attn(h, emb, context=context, batch_size=b, **kwargs)
             ## plug-in adapter features
             if ((id+1)%3 == 0) and features_adapter is not None:
                 h = h + features_adapter[adapter_idx]
@@ -745,18 +568,14 @@ class UNetModel(nn.Module):
         if features_adapter is not None:
             assert len(features_adapter)==adapter_idx, 'Wrong features_adapter'
 
-        h = self.middle_block(h, emb, context=context, batch_size=b)
+        h = self.middle_block(h, emb, context=context, batch_size=b, **kwargs)
         for module in self.output_blocks:
             h = torch.cat([h, hs.pop()], dim=1)
-            h = module(h, emb, context=context, batch_size=b)
+            h = module(h, emb, context=context, batch_size=b, **kwargs)
         h = h.type(x.dtype)
         y = self.out(h)
         
         # reshape back to (b c t h w)
         y = rearrange(y, '(b t) c h w -> b c t h w', b=b)
-<<<<<<< HEAD
         return y
     
-=======
-        return y
->>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

@@ -1,8 +1,14 @@
 import math
 import numpy as np
+<<<<<<< HEAD
+from einops import repeat
+import torch
+import torch.nn.functional as F
+=======
 import torch
 import torch.nn.functional as F
 from einops import repeat
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
 
 def timestep_embedding(timesteps, dim, max_period=10000, repeat_only=False):
@@ -57,6 +63,10 @@ def make_ddim_timesteps(ddim_discr_method, num_ddim_timesteps, num_ddpm_timestep
     if ddim_discr_method == 'uniform':
         c = num_ddpm_timesteps // num_ddim_timesteps
         ddim_timesteps = np.asarray(list(range(0, num_ddpm_timesteps, c)))
+<<<<<<< HEAD
+    elif ddim_discr_method == 'quad':
+        ddim_timesteps = ((np.linspace(0, np.sqrt(num_ddpm_timesteps * .8), num_ddim_timesteps)) ** 2).astype(int)
+=======
         steps_out = ddim_timesteps + 1
     elif ddim_discr_method == 'uniform_trailing':
         c = num_ddpm_timesteps / num_ddim_timesteps
@@ -65,12 +75,17 @@ def make_ddim_timesteps(ddim_discr_method, num_ddim_timesteps, num_ddpm_timestep
     elif ddim_discr_method == 'quad':
         ddim_timesteps = ((np.linspace(0, np.sqrt(num_ddpm_timesteps * .8), num_ddim_timesteps)) ** 2).astype(int)
         steps_out = ddim_timesteps + 1
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     else:
         raise NotImplementedError(f'There is no ddim discretization method called "{ddim_discr_method}"')
 
     # assert ddim_timesteps.shape[0] == num_ddim_timesteps
     # add one to get the final alpha values right (the ones from first scale to data during sampling)
+<<<<<<< HEAD
+    steps_out = ddim_timesteps + 1
+=======
     # steps_out = ddim_timesteps + 1
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     if verbose:
         print(f'Selected timesteps for ddim sampler: {steps_out}')
     return steps_out
@@ -82,7 +97,11 @@ def make_ddim_sampling_parameters(alphacums, ddim_timesteps, eta, verbose=True):
     alphas = alphacums[ddim_timesteps]
     alphas_prev = np.asarray([alphacums[0]] + alphacums[ddim_timesteps[:-1]].tolist())
 
+<<<<<<< HEAD
+    # according the the formula provided in https://arxiv.org/abs/2010.02502
+=======
     # according the formula provided in https://arxiv.org/abs/2010.02502
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     sigmas = eta * np.sqrt((1 - alphas_prev) / (1 - alphas) * (1 - alphas / alphas_prev))
     if verbose:
         print(f'Selected alphas for ddim sampler: a_t: {alphas}; a_(t-1): {alphas_prev}')
@@ -107,6 +126,9 @@ def betas_for_alpha_bar(num_diffusion_timesteps, alpha_bar, max_beta=0.999):
         t1 = i / num_diffusion_timesteps
         t2 = (i + 1) / num_diffusion_timesteps
         betas.append(min(1 - alpha_bar(t2) / alpha_bar(t1), max_beta))
+<<<<<<< HEAD
+    return np.array(betas)
+=======
     return np.array(betas)
 
 def rescale_zero_terminal_snr(betas):
@@ -156,3 +178,4 @@ def rescale_noise_cfg(noise_cfg, noise_pred_text, guidance_rescale=0.0):
     # mix with the original results from guidance by factor guidance_rescale to avoid "plain looking" images
     noise_cfg = guidance_rescale * noise_pred_rescaled + (1 - guidance_rescale) * noise_cfg
     return noise_cfg
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

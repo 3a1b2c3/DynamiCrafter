@@ -8,14 +8,30 @@ import torch
 import torchvision
 sys.path.insert(1, os.path.join(sys.path[0], '..', '..'))
 from lvdm.models.samplers.ddim import DDIMSampler
+<<<<<<< HEAD
+from lvdm.models.samplers.ddim_mp import DDIMSampler as DDIMSampler_mp
+
+def get_views(video_length, window_size=16, stride=4):
+    num_blocks_time = (video_length - window_size) // stride + 1
+    views = []
+    for i in range(num_blocks_time):
+        t_start = int(i * stride)
+        t_end = t_start + window_size
+        views.append((t_start,t_end))
+    return views
+=======
 from einops import rearrange
 
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
 def batch_ddim_sampling(model, cond, noise_shape, n_samples=1, ddim_steps=50, ddim_eta=1.0,\
                         cfg_scale=1.0, temporal_cfg_scale=None, **kwargs):
     ddim_sampler = DDIMSampler(model)
     uncond_type = model.uncond_type
     batch_size = noise_shape[0]
+<<<<<<< HEAD
+
+=======
     fs = cond["fs"]
     del cond["fs"]
     if noise_shape[-1] == 32:
@@ -24,6 +40,7 @@ def batch_ddim_sampling(model, cond, noise_shape, n_samples=1, ddim_steps=50, dd
     else:
         timestep_spacing = "uniform_trailing"
         guidance_rescale = 0.7
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     ## construct unconditional guidance
     if cfg_scale != 1.0:
         if uncond_type == "empty_seq":
@@ -38,8 +55,12 @@ def batch_ddim_sampling(model, cond, noise_shape, n_samples=1, ddim_steps=50, dd
         if hasattr(model, 'embedder'):
             uc_img = torch.zeros(noise_shape[0],3,224,224).to(model.device)
             ## img: b c h w >> b l c
+<<<<<<< HEAD
+            uc_img = model.get_image_embeds(uc_img)
+=======
             uc_img = model.embedder(uc_img)
             uc_img = model.image_proj_model(uc_img)
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
             uc_emb = torch.cat([uc_emb, uc_img], dim=1)
         
         if isinstance(cond, dict):
@@ -49,10 +70,17 @@ def batch_ddim_sampling(model, cond, noise_shape, n_samples=1, ddim_steps=50, dd
             uc = uc_emb
     else:
         uc = None
+<<<<<<< HEAD
+ 
+    x_T = None
+    batch_variants = []
+    #batch_variants1, batch_variants2 = [], []
+=======
     
     x_T = None
     batch_variants = []
 
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     for _ in range(n_samples):
         if ddim_sampler is not None:
             kwargs.update({"clean_cond": True})
@@ -67,6 +95,12 @@ def batch_ddim_sampling(model, cond, noise_shape, n_samples=1, ddim_steps=50, dd
                                             temporal_length=noise_shape[2],
                                             conditional_guidance_scale_temporal=temporal_cfg_scale,
                                             x_T=x_T,
+<<<<<<< HEAD
+                                            **kwargs
+                                            )
+        ## reconstruct from latent to pixel space
+        batch_images = model.decode_first_stage_2DAE(samples)
+=======
                                             fs=fs,
                                             timestep_spacing=timestep_spacing,
                                             guidance_rescale=guidance_rescale,
@@ -74,11 +108,149 @@ def batch_ddim_sampling(model, cond, noise_shape, n_samples=1, ddim_steps=50, dd
                                             )
         ## reconstruct from latent to pixel space
         batch_images = model.decode_first_stage(samples)
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         batch_variants.append(batch_images)
     ## batch, <samples>, c, t, h, w
     batch_variants = torch.stack(batch_variants, dim=1)
     return batch_variants
 
+<<<<<<< HEAD
+def batch_ddim_sampling_freenoise(model, cond, noise_shape, n_samples=1, ddim_steps=50, ddim_eta=1.0,\
+                        cfg_scale=1.0, temporal_cfg_scale=None, args=None, x_T_total=None, **kwargs):
+    ddim_sampler = DDIMSampler(model)
+    uncond_type = model.uncond_type
+    batch_size = noise_shape[0]
+
+    ## construct unconditional guidance
+    if cfg_scale != 1.0:
+        if uncond_type == "empty_seq":
+            prompts = batch_size * [""]
+            #prompts = N * T * [""]  ## if is_imgbatch=True
+            uc_emb = model.get_learned_conditioning(prompts)
+        elif uncond_type == "zero_embed":
+            c_emb = cond["c_crossattn"][0] if isinstance(cond, dict) else cond
+            uc_emb = torch.zeros_like(c_emb)
+                
+        ## process image embedding token
+        if hasattr(model, 'embedder'):
+            uc_img = torch.zeros(noise_shape[0],3,224,224).to(model.device)
+            ## img: b c h w >> b l c
+            uc_img = model.get_image_embeds(uc_img)
+            uc_emb = torch.cat([uc_emb, uc_img], dim=1)
+        
+        if isinstance(cond, dict):
+            uc = {key:cond[key] for key in cond.keys()}
+            uc.update({'c_crossattn': [uc_emb]})
+        else:
+            uc = uc_emb
+    else:
+        uc = None
+
+    views = get_views(args.frames, args.window_size, args.window_stride)
+
+    batch_variants = []
+    #batch_variants1, batch_variants2 = [], []
+    for _ in range(n_samples):
+        x_T = x_T_total[_]
+        if ddim_sampler is not None:
+            kwargs.update({"clean_cond": True})
+            samples, _ = ddim_sampler.sample(S=ddim_steps,
+                                            conditioning=cond,
+                                            batch_size=noise_shape[0],
+                                            shape=noise_shape[1:],
+                                            verbose=False,
+                                            unconditional_guidance_scale=cfg_scale,
+                                            unconditional_conditioning=uc,
+                                            eta=ddim_eta,
+                                            temporal_length=noise_shape[2],
+                                            conditional_guidance_scale_temporal=temporal_cfg_scale,
+                                            x_T=x_T,
+                                            context_next=views,
+                                            **kwargs
+                                            )
+        ## reconstruct from latent to pixel space
+        batch_images = model.decode_first_stage_2DAE(samples)
+        batch_variants.append(batch_images)
+    ## batch, <samples>, c, t, h, w
+    batch_variants = torch.stack(batch_variants, dim=1)
+    return batch_variants
+
+def batch_ddim_sampling_freenoise_mp(model, cond, noise_shape, n_samples=1, ddim_steps=50, ddim_eta=1.0,\
+                        cfg_scale=1.0, temporal_cfg_scale=None, args=None, x_T_total=None, **kwargs):
+    ddim_sampler = DDIMSampler_mp(model)
+    uncond_type = model.uncond_type
+    batch_size = noise_shape[0]
+
+    ## construct unconditional guidance
+    if cfg_scale != 1.0:
+        if uncond_type == "empty_seq":
+            prompts = batch_size * [""]
+            #prompts = N * T * [""]  ## if is_imgbatch=True
+            uc_emb = model.get_learned_conditioning(prompts)
+        elif uncond_type == "zero_embed":
+            c_emb = cond["c_crossattn"][0] if isinstance(cond, dict) else cond
+            uc_emb = torch.zeros_like(c_emb)
+                
+        ## process image embedding token
+        if hasattr(model, 'embedder'):
+            uc_img = torch.zeros(noise_shape[0],3,224,224).to(model.device)
+            ## img: b c h w >> b l c
+            uc_img = model.get_image_embeds(uc_img)
+            uc_emb = torch.cat([uc_emb, uc_img], dim=1)
+        
+        if isinstance(cond, dict):
+            uc = {key:cond[key] for key in cond.keys()}
+            uc.update({'c_crossattn': [uc_emb]})
+        else:
+            uc = uc_emb
+    else:
+        uc = None
+
+    views = get_views(args.frames, args.window_size, args.window_stride)
+
+    conditioning = cond['c_crossattn'][0]
+    len1 = int(args.frames * 3 // 8)
+    len2 = args.frames - len1 * 2
+    cond_diff1 = (conditioning[[1]] - conditioning[[0]]) / (len2 - 1)
+    cond_list1 = []
+    for i in range(len2):
+        cond_list1.append((conditioning[[0]] + cond_diff1 * i).unsqueeze(0))
+
+    cond1 = torch.cat([conditioning[[0]].unsqueeze(0).repeat(1, len1, 1, 1), torch.cat(cond_list1, 1), conditioning[[1]].unsqueeze(0).repeat(1, len1, 1, 1)], 1)
+    cond2 = torch.cat([conditioning[[1]].unsqueeze(0).repeat(1, args.frames, 1, 1)], 1)
+    
+    cond_all = torch.cat([cond1, cond2], 0)
+
+    cond['c_crossattn'] = [cond_all]
+
+    batch_variants = []
+    #batch_variants1, batch_variants2 = [], []
+    for _ in range(n_samples):
+        x_T = x_T_total[_]
+        if ddim_sampler is not None:
+            kwargs.update({"clean_cond": True})
+            samples, _ = ddim_sampler.sample(S=ddim_steps,
+                                            conditioning=cond,
+                                            batch_size=noise_shape[0],
+                                            shape=noise_shape[1:],
+                                            verbose=False,
+                                            unconditional_guidance_scale=cfg_scale,
+                                            unconditional_conditioning=uc,
+                                            eta=ddim_eta,
+                                            temporal_length=noise_shape[2],
+                                            conditional_guidance_scale_temporal=temporal_cfg_scale,
+                                            x_T=x_T,
+                                            context_next=views,
+                                            **kwargs
+                                            )
+        ## reconstruct from latent to pixel space
+        batch_images = model.decode_first_stage_2DAE(samples)
+        batch_variants.append(batch_images)
+    ## batch, <samples>, c, t, h, w
+    batch_variants = torch.stack(batch_variants, dim=1)
+    return batch_variants
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
 def get_filelist(data_dir, ext='*'):
     file_list = glob.glob(os.path.join(data_dir, '*.%s'%ext))
@@ -100,6 +272,9 @@ def get_dirlist(path):
 def load_model_checkpoint(model, ckpt):
     def load_checkpoint(model, ckpt, full_strict):
         state_dict = torch.load(ckpt, map_location="cpu")
+<<<<<<< HEAD
+        try:
+=======
         if "state_dict" in list(state_dict.keys()):
             state_dict = state_dict["state_dict"]
             try:
@@ -117,12 +292,20 @@ def load_model_checkpoint(model, ckpt):
                         del new_pl_sd[k]
                 model.load_state_dict(new_pl_sd, strict=full_strict)
         else:
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
             ## deepspeed
             new_pl_sd = OrderedDict()
             for key in state_dict['module'].keys():
                 new_pl_sd[key[16:]]=state_dict['module'][key]
             model.load_state_dict(new_pl_sd, strict=full_strict)
+<<<<<<< HEAD
+        except:
+            if "state_dict" in list(state_dict.keys()):
+                state_dict = state_dict["state_dict"]
+            model.load_state_dict(state_dict, strict=full_strict)
+=======
 
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         return model
     load_checkpoint(model, ckpt, full_strict=True)
     print('>>> model checkpoint loaded.')
@@ -139,16 +322,43 @@ def load_prompts(prompt_file):
         f.close()
     return prompt_list
 
+<<<<<<< HEAD
+def load_prompts_mp(prompt_file):
+    f = open(prompt_file, 'r')
+    prompt_list = []
+    for idx, line in enumerate(f.readlines()):
+        l = []
+        line = line.strip()
+        prompts =  line.split(';')
+        for prompt in prompts:
+            prompt = prompt.strip()
+            if len(prompt) != 0:
+                l.append(prompt)
+        if len(l) != 0:
+            prompt_list.append(l)
+        f.close()
+    print(prompt_list)
+    return prompt_list
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
 def load_video_batch(filepath_list, frame_stride, video_size=(256,256), video_frames=16):
     '''
     Notice about some special cases:
     1. video_frames=-1 means to take all the frames (with fs=1)
+<<<<<<< HEAD
+    2. when the total video frames is less than required, padding strategy will be used (repreated last frame)
+    '''
+    fps_list = []
+    batch_tensor = []
+    assert frame_stride > 0, "valid frame stride should be a positive integer!"
+=======
     2. when the total video frames is less than required, padding strategy will be used (repeated last frame)
     '''
     fps_list = []
     batch_tensor = []
     assert frame_stride > 0, "valid frame stride should be a positive interge!"
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
     for filepath in filepath_list:
         padding_num = 0
         vidreader = VideoReader(filepath, ctx=cpu(0), width=video_size[1], height=video_size[0])
@@ -217,6 +427,8 @@ def save_videos(batch_tensors, savedir, filenames, fps=10):
         savepath = os.path.join(savedir, f"{filenames[idx]}.mp4")
         torchvision.io.write_video(savepath, grid, fps=fps, video_codec='h264', options={'crf': '10'})
 
+<<<<<<< HEAD
+=======
 
 def get_latent_z(model, videos):
     b, c, t, h, w = videos.shape
@@ -224,3 +436,4 @@ def get_latent_z(model, videos):
     z = model.encode_first_stage(x)
     z = rearrange(z, '(b t) c h w -> b c t h w', b=b, t=t)
     return z
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
