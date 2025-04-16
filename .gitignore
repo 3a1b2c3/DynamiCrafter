@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 **/*.pyc
 **/.vscode
 **/build
@@ -29,3 +30,15 @@ Reconstruction/data_sparse
 [Ll][Oo][Gg][Ss]?/
 
 **/.ruff_cache
+=======
+.DS_Store
+*pyc
+.vscode
+__pycache__
+*.egg-info
+
+checkpoints
+results
+backup
+LOG
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
