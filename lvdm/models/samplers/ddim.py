@@ -30,7 +30,13 @@ class DDIMSampler(object):
 
         if self.model.use_dynamic_rescale:
             self.ddim_scale_arr = self.model.scale_arr[self.ddim_timesteps]
+<<<<<<< HEAD
+            # self.ddim_scale_arr_prev = torch.cat([self.ddim_scale_arr[0:1], self.ddim_scale_arr[:-1]])
+            # fix a bug
+            self.ddim_scale_arr_prev = torch.cat([self.model.scale_arr[0:1], self.ddim_scale_arr[:-1]])
+=======
             self.ddim_scale_arr_prev = torch.cat([self.ddim_scale_arr[0:1], self.ddim_scale_arr[:-1]])
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
         self.register_buffer('betas', to_torch(self.model.betas))
         self.register_buffer('alphas_cumprod', to_torch(alphas_cumprod))

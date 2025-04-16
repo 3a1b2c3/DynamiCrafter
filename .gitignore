@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+.DS_Store
+__pycache__
+=======
 .DS_Store
 *pyc
 .vscode
@@ -8,3 +12,4 @@ checkpoints
 results
 backup
 LOG
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023

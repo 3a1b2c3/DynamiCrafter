@@ -4,7 +4,11 @@ import torch
 import numpy as np
 import torch.nn as nn
 from einops import rearrange
+<<<<<<< HEAD
+from utils.diffusion_utils import instantiate_from_config
+=======
 from utils.utils import instantiate_from_config
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 from lvdm.modules.attention import LinearAttention
 
 def nonlinearity(x):
