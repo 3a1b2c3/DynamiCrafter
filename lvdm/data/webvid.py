@@ -70,7 +70,11 @@ class WebVid(Dataset):
             self.spatial_transform = None
                 
     def _load_metadata(self):
+<<<<<<< HEAD
         metadata = pd.read_csv(self.meta_path)
+=======
+        metadata = pd.read_csv(self.meta_path, dtype=str)
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         print(f'>>> {len(metadata)} data samples loaded.')
         if self.subsample is not None:
             metadata = metadata.sample(self.subsample, random_state=0)

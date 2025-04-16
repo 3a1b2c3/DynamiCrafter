@@ -5,7 +5,11 @@ https://github.com/lucidrains/denoising-diffusion-pytorch/blob/7706bdfc6f527f58d
 https://github.com/CompVis/taming-transformers
 -- merci
 """
+<<<<<<< HEAD
 import re
+=======
+
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 from functools import partial
 from contextlib import contextmanager
 import numpy as np
@@ -20,7 +24,11 @@ from torch.optim.lr_scheduler import LambdaLR, CosineAnnealingLR
 from torchvision.utils import make_grid
 import pytorch_lightning as pl
 from pytorch_lightning.utilities import rank_zero_only
+<<<<<<< HEAD
 from utils.diffusion_utils import instantiate_from_config
+=======
+from utils.utils import instantiate_from_config
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 from lvdm.ema import LitEma
 from lvdm.models.samplers.ddim import DDIMSampler
 from lvdm.distributions import DiagonalGaussianDistribution
@@ -481,7 +489,11 @@ class LatentDiffusion(DDPM):
                  use_dynamic_rescale=False,
                  base_scale=0.7,
                  turning_step=400,
+<<<<<<< HEAD
                  loop_video=False,
+=======
+                 interp_mode=False,
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
                  fps_condition_type='fs',
                  perframe_ae=False,
                  # added
@@ -502,7 +514,11 @@ class LatentDiffusion(DDPM):
         self.cond_stage_key = cond_stage_key
         self.noise_strength = noise_strength
         self.use_dynamic_rescale = use_dynamic_rescale
+<<<<<<< HEAD
         self.loop_video = loop_video
+=======
+        self.interp_mode = interp_mode
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         self.fps_condition_type = fps_condition_type
         self.perframe_ae = perframe_ae
 
@@ -1026,14 +1042,22 @@ class LatentDiffusion(DDPM):
             raise NotImplementedError
         return lr_scheduler
 
+<<<<<<< HEAD
 # fa
 class LatentVisualDiffusion(LatentDiffusion):
     def __init__(self, img_cond_stage_config, image_proj_stage_config, freeze_embedder=True, image_proj_model_trainable=True,fix_temporal=False, *args, **kwargs):
+=======
+class LatentVisualDiffusion(LatentDiffusion):
+    def __init__(self, img_cond_stage_config, image_proj_stage_config, freeze_embedder=True, image_proj_model_trainable=True, *args, **kwargs):
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
         super().__init__(*args, **kwargs)
         self.image_proj_model_trainable = image_proj_model_trainable
         self._init_embedder(img_cond_stage_config, freeze_embedder)
         self._init_img_ctx_projector(image_proj_stage_config, image_proj_model_trainable)
+<<<<<<< HEAD
         self.fix_temporal = fix_temporal
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
     def _init_img_ctx_projector(self, config, trainable):
         self.image_proj_model = instantiate_from_config(config)
@@ -1095,10 +1119,23 @@ class LatentVisualDiffusion(LatentDiffusion):
         img_emb = self.image_proj_model(img_emb)
 
         if self.model.conditioning_key == 'hybrid':
+<<<<<<< HEAD
             ## simply repeat the cond_frame to match the seq_len of z
             img_cat_cond = z[:,:,cond_frame_index,:,:]
             img_cat_cond = img_cat_cond.unsqueeze(2)
             img_cat_cond = repeat(img_cat_cond, 'b c t h w -> b c (repeat t) h w', repeat=z.shape[2])
+=======
+            if self.interp_mode:
+                ## starting frame + (L-2 empty frames) + ending frame
+                img_cat_cond = torch.zeros_like(z)
+                img_cat_cond[:,:,0,:,:] = z[:,:,0,:,:]
+                img_cat_cond[:,:,-1,:,:] = z[:,:,-1,:,:]
+            else:
+                ## simply repeat the cond_frame to match the seq_len of z
+                img_cat_cond = z[:,:,cond_frame_index,:,:]
+                img_cat_cond = img_cat_cond.unsqueeze(2)
+                img_cat_cond = repeat(img_cat_cond, 'b c t h w -> b c (repeat t) h w', repeat=z.shape[2])
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
             cond["c_concat"] = [img_cat_cond] # b c t h w
         cond["c_crossattn"] = [torch.cat([prompt_imb, img_emb], dim=1)] ## concat in the seq_len dim
@@ -1199,6 +1236,7 @@ class LatentVisualDiffusion(LatentDiffusion):
         """ configure_optimizers for LatentDiffusion """
         lr = self.learning_rate
 
+<<<<<<< HEAD
         # params = list(self.model.parameters())
         # mainlogger.info(f"@Training [{len(params)}] Full Paramters.")
 
@@ -1219,6 +1257,10 @@ class LatentVisualDiffusion(LatentDiffusion):
         else:
             params = list(self.model.parameters())
             mainlogger.info(f"@Training [{len(params)}] Full Paramters.")
+=======
+        params = list(self.model.parameters())
+        mainlogger.info(f"@Training [{len(params)}] Full Paramters.")
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
         if self.cond_stage_trainable:
             params_cond_stage = [p for p in self.cond_stage_model.parameters() if p.requires_grad == True]
@@ -1247,6 +1289,7 @@ class LatentVisualDiffusion(LatentDiffusion):
         
         return optimizer
 
+<<<<<<< HEAD
 class VIPLatentDiffusion(LatentVisualDiffusion):
     def get_batch_input(self, batch, random_uncond, return_first_stage_outputs=False, return_original_cond=False, return_fs=False, return_cond_frame=False, return_cond_frames=False,**kwargs):
         ## x: b c t h w
@@ -1416,6 +1459,8 @@ class VIPLatentDiffusion(LatentVisualDiffusion):
                 log["denoise_row"] = denoise_grid
 
         return log
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
 
 class DiffusionWrapper(pl.LightningModule):
     def __init__(self, diff_model_config, conditioning_key):
@@ -1435,8 +1480,11 @@ class DiffusionWrapper(pl.LightningModule):
             cc = torch.cat(c_crossattn, 1)
             out = self.diffusion_model(x, t, context=cc, **kwargs)
         elif self.conditioning_key == 'hybrid':
+<<<<<<< HEAD
             # import pdb 
             # pdb.set_trace()
+=======
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
             ## it is just right [b,c,t,h,w]: concatenate in channel dim
             xc = torch.cat([x] + c_concat, dim=1)
             cc = torch.cat(c_crossattn, 1)
@@ -1488,5 +1536,9 @@ class DiffusionWrapper(pl.LightningModule):
         else:
             raise NotImplementedError()
 
+<<<<<<< HEAD
         return out
 
+=======
+        return out
+>>>>>>> 859021927d8e0f8eb4d91d16f86711b8c25a2023
