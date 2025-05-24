@@ -136,7 +136,7 @@ lightning:
     accumulate_grad_batches: 2
     max_steps: 100000
     # logger
-    log_every_n_steps: 10
+    log_every_n_steps: 3
     # val
     val_check_interval: 0.5
     gradient_clip_algorithm: 'norm'
@@ -145,7 +145,7 @@ lightning:
     model_checkpoint:
       target: pytorch_lightning.callbacks.ModelCheckpoint
       params:
-        every_n_train_steps: 100 #1000
+        every_n_train_steps: 10 #1000
         filename: "{epoch}-{step}"
         save_weights_only: True
     metrics_over_trainsteps_checkpoint:
@@ -153,7 +153,7 @@ lightning:
       params:
         filename: '{epoch}-{step}'
         save_weights_only: True
-        every_n_train_steps: 10000 #20000 # 3s/step*2w=
+        every_n_train_steps: 10 #20000 # 3s/step*2w=
     batch_logger:
       target: callbacks.ImageLogger
       params:
