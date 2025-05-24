@@ -73,7 +73,7 @@ class DDPM(pl.LightningModule):
                  first_stage_key="image",
                  image_size=256,
                  channels=3,
-                 log_every_t=100,
+                 log_every_t=5,
                  clip_denoised=True,
                  linear_start=1e-4,
                  linear_end=2e-2,
@@ -123,6 +123,7 @@ class DDPM(pl.LightningModule):
         if monitor is not None:
             self.monitor = monitor
         if ckpt_path is not None:
+            print("ckpt2:", ckpt)
             self.init_from_ckpt(ckpt_path, ignore_keys=ignore_keys, only_model=load_only_unet)
 
         self.register_schedule(given_betas=given_betas, beta_schedule=beta_schedule, timesteps=timesteps,
@@ -403,7 +404,7 @@ class DDPM(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         loss, loss_dict = self.shared_step(batch)
-
+        print("DDPM___loss", loss)
         self.log_dict(loss_dict, prog_bar=True,
                       logger=True, on_step=True, on_epoch=True)
 
@@ -515,6 +516,7 @@ class LatentDiffusion(DDPM):
         assert self.num_timesteps_cond <= kwargs['timesteps']
         # for backwards compatibility after implementation of DiffusionWrapper
         ckpt_path = kwargs.pop("ckpt_path", None)
+        print("ickpt_patht: ",  ckpt_path)
         ignore_keys = kwargs.pop("ignore_keys", [])
         conditioning_key = default(conditioning_key, 'crossattn')
         super().__init__(conditioning_key=conditioning_key, *args, **kwargs)
@@ -1106,6 +1108,8 @@ class LatentVisualDiffusion(LatentDiffusion):
         cond_frame_index = 0
         if self.rand_cond_frame:
             cond_frame_index = random.randint(0, self.model.diffusion_model.temporal_length-1)
+
+        print("______cond_frame_index:", cond_frame_index,self.model.conditioning_key)
 
         img = x[:,:,cond_frame_index,...]
         img = input_mask * img
