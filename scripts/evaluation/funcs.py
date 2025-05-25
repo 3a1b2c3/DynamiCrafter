@@ -100,6 +100,7 @@ def get_dirlist(path):
 def load_model_checkpoint(model, ckpt):
     def load_checkpoint(model, ckpt, full_strict):
         state_dict = torch.load(ckpt, map_location="cpu")
+
         if "state_dict" in list(state_dict.keys()):
             state_dict = state_dict["state_dict"]
             try:
@@ -119,10 +120,12 @@ def load_model_checkpoint(model, ckpt):
         else:
             ## deepspeed
             new_pl_sd = OrderedDict()
-            for key in state_dict['module'].keys():
-                new_pl_sd[key[16:]]=state_dict['module'][key]
-            model.load_state_dict(new_pl_sd, strict=full_strict)
-
+            try:
+                for key in state_dict['module'].keys():
+                    new_pl_sd[key[16:]]=state_dict['module'][key]
+                model.load_state_dict(new_pl_sd, strict=full_strict)
+            except: #lora
+                model.load_state_dict(state_dict, strict=full_strict)
         return model
     load_checkpoint(model, ckpt, full_strict=True)
     print('>>> model checkpoint loaded.')

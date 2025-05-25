@@ -11,16 +11,19 @@ from pytorch_lightning import seed_everything
 
 
 class Image2Video():
-    def __init__(self,result_dir='./tmp/',gpu_num=1,resolution='256_256') -> None:
+    def __init__(self,  result_dir='./tmp/',  ckpt_path=None, gpu_num=1,resolution='256_256', save_fps = 8) -> None:
         self.resolution = (int(resolution.split('_')[0]), int(resolution.split('_')[1])) #hw
-        self.download_model()
         
         self.result_dir = result_dir
         if not os.path.exists(self.result_dir):
             os.mkdir(self.result_dir)
-        ckpt_path='checkpoints/dynamicrafter_'+resolution.split('_')[1]+'_interp_v1/model.ckpt'
+        print(ckpt_path)
+        if not ckpt_path:
+            ckpt_path='checkpoints/dynamicrafter_'+resolution.split('_')[1]+'_interp_v1/model.ckpt'
+            self.download_model()
         config_file='configs/inference_'+resolution.split('_')[1]+'_v1.0.yaml'
         config = OmegaConf.load(config_file)
+        print(config_file, "config_file:", config)
         model_config = config.pop("model", OmegaConf.create())
         model_config['params']['unet_config']['params']['use_checkpoint']=False   
         model_list = []
@@ -32,10 +35,51 @@ class Image2Video():
             model.eval()
             model_list.append(model)
         self.model_list = model_list
-        self.save_fps = 8
+        self.save_fps = save_fps
 
     def get_image(self, image, prompt, steps=50, cfg_scale=7.5, eta=1.0, fs=3, seed=123, image2=None):
-        seed_everything(seed)
+        """
+        base_scale: 1.0  # or 1.2 for stronger conditioning
+        unet_config:
+        params:
+            dropout: 0.0
+            transformer_depth: 2  # optional
+            num_head_channels: 128  # optional
+        Creative/Controlling Parameters
+        Parameter
+        Influence on Creativity
+        Notes
+        --ddim_steps
+        🔥 Higher = more refined, lower = faster but rougher
+        Reducing steps can lead to more unexpected outputs.
+        --ddim_eta
+        🔀 Adds randomness/noise to sampling
+        0.0 = deterministic (less creative), 1.0 = more stochastic (more variation)
+        --unconditional_guidance_scale
+        🎯 Controls prompt influence
+        Higher = more adherence to prompt, lower = more freedom
+        --guidance_rescale
+        📏 Refines how strongly the guidance is applied
+        Lower = more balanced realism/creativity; useful for better tradeoffs
+        --prompt
+        💬 Directly defines the visual concept to be rendered
+        Changing this creates entirely new scenes or vibes
+        --multiple_cond_cfg + --cfg_img
+        🧠 Combine text + image for hybrid creativity
+        If True, you can vary conditioning strength from image/text
+        --seed
+        🎲 Controls random initialization
+        Changing seed produces visually different samples even with same prompt
+        """
+        steps=80 #steps=50,
+        cfg_scale=8#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
+        eta=.5 # deterministic   eta=1.0
+
+        fs=10
+        seed=123
+        #seed=113
+        print(type(seed), dir(seed), self.save_fps,"_____seed:  steps=50, cfg_scale=7.5, eta=1.0:",  steps, cfg_scale, eta, fs)#_____seed:  annotation=NoneType required=False default=12306
+        seed_everything(int(seed))
         transform = transforms.Compose([
             transforms.Resize(min(self.resolution)),
             transforms.CenterCrop(self.resolution),
