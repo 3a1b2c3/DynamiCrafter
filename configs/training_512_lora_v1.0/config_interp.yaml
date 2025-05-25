@@ -120,8 +120,8 @@ data:
     train:
       target: lvdm.data.webvid.WebVid
       params:
-        data_dir: C:\workspace\cs231n\proj\DynamiCrafter\data\driving
-        meta_path: C:\workspace\cs231n\proj\DynamiCrafter\data\driving.csv
+        data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving
+        meta_path: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving.csv
         video_length: 16
         frame_stride: 6
         load_raw_resolution: true
