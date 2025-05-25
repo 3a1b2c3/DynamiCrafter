@@ -1,6 +1,8 @@
 import argparse
 import os
 from collections import OrderedDict
+import sys
+sys.path.insert(0, r"C:\workspace\cs231n\proj\DynamiCrafterLora")
 
 from safetensors.torch import load_file
 from safetensors.torch import save_file
@@ -35,6 +37,7 @@ def extractLora(state_dict, path_to_model):
         save_file(state_dict_lora, result_name)
     else:
         torch.save(state_dict_lora, result_name)
+    print(result_name)
 
 
 if __name__ == "__main__":

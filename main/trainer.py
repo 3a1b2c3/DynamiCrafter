@@ -7,7 +7,7 @@ from lightning_fabric.plugins import TorchCheckpointIO
 from lightning_fabric.utilities.cloud_io import get_filesystem, _atomic_save
 from lightning_fabric.utilities.types import _PATH
 from omegaconf import OmegaConf
-from torchtune.modules.peft import LoRALinear
+from torchtune.modules.peft import LoRALinear # TODO
 from transformers import logging as transf_logging
 import pytorch_lightning as pl
 from pytorch_lightning import seed_everything
@@ -113,9 +113,9 @@ def configure_lora(model, rank, alpha, dropout, skip_layers):
 
 if __name__ == "__main__":
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
-    local_rank = int(os.environ.get('LOCAL_RANK'))
-    global_rank = int(os.environ.get('RANK'))
-    num_rank = int(os.environ.get('WORLD_SIZE'))
+    local_rank = 0# int(os.environ.get('LOCAL_RANK'))
+    global_rank = 0# int(os.environ.get('RANK'))
+    num_rank = 0# int(os.environ.get('WORLD_SIZE'))
 
     parser = get_parser()
     ## Extends existing argparse by default Trainer attributes
@@ -140,6 +140,7 @@ if __name__ == "__main__":
     ## MODEL CONFIG >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     logger.info("***** Configing Model *****")
     config.model.params.logdir = workdir
+    print("config:", config)
     model = instantiate_from_config(config.model)
 
     #apply lora layers to model
@@ -243,8 +244,8 @@ if __name__ == "__main__":
             pudb.set_trace()
 
     import signal
-    signal.signal(signal.SIGUSR1, melk)
-    signal.signal(signal.SIGUSR2, divein)
+    #signal.signal(signal.SIGUSR1, melk)
+    #signal.signal(signal.SIGUSR2, divein)
 
     ## Running LOOP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     logger.info("***** Running the Loop *****")

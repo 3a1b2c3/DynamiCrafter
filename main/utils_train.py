@@ -34,6 +34,7 @@ def check_config_attribute(config, name):
         return None
 
 def get_trainer_callbacks(lightning_config, config, logdir, ckptdir, logger):
+    print(" get_trainer_callbacks")
     default_callbacks_cfg = {
         "model_checkpoint": {
             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
@@ -82,6 +83,7 @@ def get_trainer_callbacks(lightning_config, config, logdir, ckptdir, logger):
                                                         "filename": "{epoch}-{step}",
                                                         "verbose": True,
                                                         'save_top_k': -1,
+                                                        'every_n_train_steps': 10,
                                                         'save_weights_only': True
                                                     }
                                                 }
