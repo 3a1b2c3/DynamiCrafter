@@ -41,7 +41,9 @@ videoid,contentUrl,duration,page_dir,name,dynamic_confidence,dynamic_wording,dyn
 51,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,Shoppers walk down a back alley in Tokyo,90.0,Shoppers walk down a back alley,nature
 52,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,Shoppers walk down a back alley in Tokyo,90.0,Shoppers walk down a back alley,nature
 53,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,Passants crossing in front of shops in Tokyo,90.0,Passants crossing in front of shops,nature
-54,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,back alley qith biker in Tokyo,90.0,back alley qith biker,nature
+54,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,back alley with biker in Tokyo,90.0,back alley with biker cyling by,nature
 55,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,Walking by food stalls in Tokyo,90.0,Walking by food stalls in Tokyo,nature
 56,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,Walking by a construction site under powerlines in Tokyo,90.0,Walking by a construction site under powerlines,nature
-
+57,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,Passants walking in a backlane in Tokyo,90.0,Passants crossing in front of shops,nature
+58,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,People walk around a backland with outdoor shops in Tokyo,90.0,People walk around a backland with outdoor shops,nature
+60,https://ingmec.ual.es/~jlblanco/malaga-urban-dataset/extracts/malaga-urban-dataset-extract-07.zip,PT00H00M9S,0-1000,Truck driving off in backlane in Tokyo,90.0,Truck driving off in backlane,nature
