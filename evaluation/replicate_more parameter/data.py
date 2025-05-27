@@ -161,6 +161,21 @@ ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\im
 ## 10 fps  truck driving  in backlane
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_585\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\60.mp4" 
 
+## 29 fps traffic light crossing overcast
+ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_3\Chunk_3\99c94dc769b5d96e_2018-05-03--09-25-46\36\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\61.mp4"
+
+## 29 fps dense high way traffic
+ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_3\Chunk_3\99c94dc769b5d96e_2018-05-02--16-01-39\73\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\62.mp4"
+
+## 29 fps tree line road, dense traffic on a tree lined road at dawn
+ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_3\Chunk_3\99c94dc769b5d96e_2018-05-03--08-13-12\10\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\63.mp4"
+
+## 29 fps tree line road
+ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_10\Chunk_10\99c94dc769b5d96e_2018-11-16--15-11-03\15\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\64.mp4"
+
+## 29 fps highway approaching a city, traffic
+ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_10\Chunk_10\99c94dc769b5d96e_2018-11-14--13-31-42\36\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\65.mp4"
+
 
 P = Period (start of duration spec)
 T = Time (starts the time section)
