@@ -143,11 +143,12 @@ ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\im
 ## 10 fps tokyo, back alley biker 99
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_508\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\54.mp4" 
 
-## 10 fps food stalls
+## 10 fps food stalls 
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_480\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\55.mp4" 
 
-## 10 fps   tokyo,construction site powerlines
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_486\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\56.mp4" 
+## 10 fps   tokyo,construction site powerlines  tetst set
+#ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_486\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\56.mp4" 
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_85\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\56.mp4"
 
 ## 10 fps  594 passants walking in a backlane
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_780\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\57.mp4" 
@@ -176,6 +177,12 @@ ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_10\Chunk_10\99c94dc769b
 ## 29 fps highway approaching a city, traffic
 ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_10\Chunk_10\99c94dc769b5d96e_2018-11-14--13-31-42\36\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\65.mp4"
 
+## 10 fps   
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_585\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\66.mp4" 
+
+## 10 fps   
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_585\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\66.mp4" 
+
 
 P = Period (start of duration spec)
 T = Time (starts the time section)
@@ -183,6 +190,7 @@ T = Time (starts the time section)
 00M = 0 Minutes
 18S = 18 Seconds
 
+ python ./main/trainer.py --base c:\workspace\cs231n\proj\DynamiCrafterLora\configs\training_512_lora_v1.0\config_interp.yaml  --train --name test --logdir"C:\workspace\cs231n\proj\DynamiCrafterLora\data" 
 
 ffmpeg -i input.hevc -c:v libx265 -crf 28 -preset slow -c:a aac -b:a 128k -movflags +faststart output.mp4
 
