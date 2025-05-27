@@ -1,10 +1,6 @@
 c
 
 
-
-
-
-
 # 10 biking along a wall    C:\workspace\cs231n\proj\data\kitti\videos\TRAIN\2011_09_26\2011_09_26_drive_0002_sync\image_03\data\001_result.jpg
 ffmpeg  -start_number 1 -i "C:\workspace\cs231n\proj\data\kitti\videos\TRAIN\2011_09_26\2011_09_26_drive_0002_sync\image_03\data\%d_result.jpg" -c:v libx264 -r 10 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\10.mp4"
 ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\videos\TRAIN\2011_09_26\2011_09_26_drive_0002_sync\image_03\data\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\10.mp4"
@@ -182,11 +178,26 @@ ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_10\Chunk_10\99c94dc769b
 ## 29 fps highway approaching a city, traffic
 ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_10\Chunk_10\99c94dc769b5d96e_2018-11-14--13-31-42\36\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\65.mp4"
 
-## 10 fps   
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_585\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\66.mp4" 
+## 10 fps narrow street obstacles, overcast
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_766\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\66.mp4" 
 
-## 10 fps   
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_585\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\66.mp4" 
+## 10 fps   sunny cbd
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\67.mp4" 
+
+## 10 fps  biker at a train crossing
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_673\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\68.mp4" 
+
+## 10 fps   street with neon signs
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_614\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\69.mp4" 
+
+## 10 fps  restaurants and signs 
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_557\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\70.mp4" 
+
+## 10 fps  driving narrow road with hotels and signs
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_593\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\71.mp4" 
+
+## 29 fps highway driving by some houses
+ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_10\Chunk_10\99c94dc769b5d96e_2018-11-19--09-56-45\33\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\72.mp4"
 
 
 python run.py  --video_path C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\2011_09_26_KITTI.mp4  --save_folder workspace/examples_output  --height 384 --width 640 --low_memory_usage True --decode_chunk_size 6
@@ -223,3 +234,21 @@ Video resolution: 512x384
 -vf "scale=256:160,crop=512:320:(in_w-512)/2:(in_h-320)/2"
 ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_1\Chunk_1\b0c9d2329ad1606b_2018-08-17--14-55-39\9\video.hevc  -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -c:v libx265 -crf 28 -preset slow -c:a aac -b:a 128k -movflags +faststart C:\workspace\cs231n\proj\data\comma2k19\Chunk_1\Chunk_1\b0c9d2329ad1606b_2018-08-17--14-55-39\9\output.mp4
 C:\workspace\cs231n\proj\data\comma2k19\Chunk_1\Chunk_1\b0c9d2329ad1606b_2018-08-17--14-55-39\8
+
+
+# Evaluation test set
+
+## 10 fps  leafy backlane 
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_170\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\10.mp4" 
+
+## 10 fps   street with  shops and signs
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_771\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\11.mp4"
+
+## 10 fps  people walking street with shops
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_689\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\12.mp4"
+
+## 10 fps  passing a village parking cars
+ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\VAL\2011_09_30_drive_0018_sync\image_03\data\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\13.mp4"
+
+## 29  
+ffmpeg -i C:\workspace\cs231n\proj\data\comma2k19\VAL\11\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\14.mp4"
