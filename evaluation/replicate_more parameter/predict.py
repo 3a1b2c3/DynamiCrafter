@@ -6,18 +6,25 @@ sys.path.insert(0, r"C:\workspace\cs231n\proj\DynamiCrafterLora")
 os.chdir(r"C:\workspace\cs231n\proj\DynamiCrafterLora")
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafter\checkpoints\dynamicrafter_256_v1\dynamicrafter_512_interp_v1.ckpt"
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\lora\model_train_epoch=0-step=9_applied.ckpt"
+ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train_epoch=0-step=3-v2_applied.ckpt"
 #ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt"
 # C:\workspace\cs231n\proj\DynamiCrafter\configs\training_512_v1.0\config_interp.yaml
 # python apply_lora.py --format ckpt --base_model="C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt" --lora=C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\old\epoch=0-step=9.ckpt --alpha=1.0
 directory = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output"
 # C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\old\epoch=0-step=9.ckpt
 
+
 from PIL import Image
 import numpy as np
 import torch
 from scripts.gradio.i2v_test_application import Image2Video
 import scripts.gradio.i2v_test_application
-print(scripts.gradio.i2v_test_application, "scripts.gradio.i2v_test_application:", sys.path)
+
+print(
+    scripts.gradio.i2v_test_application,
+    "scripts.gradio.i2v_test_application:",
+    sys.path,
+)
 
 """
 
@@ -57,15 +64,17 @@ Changing seed produces visually different samples even with same prompt
 
 
 class Predictor(BasePredictor):
-    def setup(self, ckpt=None, save_fps=10, directory =r"C:\workspace\cs231n\proj\DynamiCrafterLora\output") -> None:
+    def setup(
+        self,
+        ckpt=None,
+        save_fps=10,
+        directory=r"C:\workspace\cs231n\proj\DynamiCrafterLora\output",
+    ) -> None:
         if not os.path.exists(directory):
             os.mkdir(directory)
         assert ckpt
         self.image2video = Image2Video(
-           directory,
-            ckpt_path=ckpt,
-            resolution="320_512",
-            save_fps=save_fps
+            directory, ckpt_path=ckpt, resolution="320_512", save_fps=save_fps
         )
         #   def __init__(self,  result_dir='./tmp/',  ckpt_path=None, gpu_num=1,resolution='256_256', save_fps = 8) -> None:
         # self.save_fps = 10 # ME
@@ -121,9 +130,14 @@ class Predictor(BasePredictor):
         )
         return i2v_output_video
 
+
 p10 = Predictor()
 p = Predictor()
-p.setup(ckpt=ckpt, save_fps=10, directory =  r"C:\workspace\cs231n\proj\DynamiCrafterLora\output")
+p.setup(
+    ckpt=ckpt,
+    save_fps=10,
+    directory=r"C:\workspace\cs231n\proj\DynamiCrafterLora\output",
+)
 img_folder = r"C:\workspace\cs231n\proj\data\kitti\TEST\selected"
 img_folder_kitti = r"C:\workspace\cs231n\proj\data\kitti\TEST"
 f = "2011_09_26_drive_0091_sync"
@@ -137,11 +151,128 @@ configs/inference_512_v1.0.yaml config_file: {'model': {'target': 'lvdm.models.d
 python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml --ckpt <path/to/ldmvfi-vqflow-f32-c256-concat_max.ckpt> --dataset Middlebury_others --metrics PSNR SSIM LPIPS \
 --data_dir <path/to/data/dir> --out_dir eval_results/ldmvfi-vqflow-f32-c256-concat_max/  --use_ddim
 """
+for i in range(1, 99, 6):
+    n= str(i)
+    image1_path = (
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\images\%s_result.jpg" % n.zfill(3)
+    )
+    n= str(i + 6)
+    image2_path = (
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\\%s_result.jpg"  % n.zfill(3)
+    )
+    res6 = p.predict(
+        image1_path=image1_path,
+        image2_path=image2_path,
+        prompt= str(i) + ". slowly going down the street in tokyo next to a construction site",
+    )
+    
+    
+for i in range(1, 238, 6):
+    n= str(i)
+    image1_path = (
+        r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg" % n.zfill(3)
+    )
+    n= str(i + 6)
+    image2_path = (
+        r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"  % n.zfill(3)
+    )
+    res6 = p.predict(
+        image1_path=image1_path,
+        image2_path=image2_path,
+        prompt= str(i) + ". slowly going down the street in Stuttgart",
+    )
+    
+    print("t1:", t1 - t0)
+    raise AttributeError("tokyo")
+
+
+
+
+
+print("t1:", t1 - t0)
+raise AttributeError("tokyo")
+
+t0 = time.time()
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\020_result.jpg"
+)
+image2_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\025_result.jpg"
+)
+res6 = p.predict(
+    image1_path=image1_path,
+    image2_path=image2_path,
+    prompt="1, slowly going down a construction site in tokyo",
+)
+t0 = time.time()
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\020_result.jpg"
+)
+image2_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\026_result.jpg"
+)
+res6 = p.predict(
+    image1_path=image1_path,
+    image2_path=image2_path,
+    prompt="2, slowly going down a construction site in tokyo",
+)
+
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\026_result.jpg"
+)
+image2_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\032_result.jpg"
+)
+res6 = p.predict(
+    image1_path=image1_path,
+    image2_path=image2_path,
+    prompt="3. slowly going down a construction site in tokyo",
+)
+t0 = time.time()
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\032_result.jpg"
+)
+image2_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\038_result.jpg"
+)
+res6 = p.predict(
+    image1_path=image1_path,
+    image2_path=image2_path,
+    prompt="4 slowly going down a construction site in tokyo",
+)
+raise AttributeError("tokyo")
+#############################################################################
+t0 = time.time()
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_756\images\049_result.jpg"
+)
+image2_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_756\images\054_result.jpg"
+)
+res6 = p.predict(
+    image1_path=image1_path,
+    image2_path=image2_path,
+    prompt="slowly going down the street in tokyo",
+)
+t1 = time.time()
+print("t1:", t1 - t0)
+raise AttributeError("tokyo")
+
+t0 = time.time()
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\097_result.jpg"
+image2_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\103_result.jpg"
+res6 = p.predict(
+    image1_path=image1_path,
+    image2_path=image2_path,
+    prompt="slowly going down the street",
+)
+t1 = time.time()
+
 # linear
 # camera only
 t0 = time.time()
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\097_result.jpg"
-image2_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\102_result.jpg"
+image2_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\103_result.jpg"
 res6 = p.predict(
     image1_path=image1_path,
     image2_path=image2_path,
@@ -152,8 +283,8 @@ print("t1:", t1 - t0)
 
 # overlap for recursice
 t2 = time.time()
-image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\102_result.jpg"
-image2_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\107_result.jpg"
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\103_result.jpg"
+image2_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\109_result.jpg"
 res7 = p.predict(
     image1_path=image1_path,
     image2_path=image2_path,
