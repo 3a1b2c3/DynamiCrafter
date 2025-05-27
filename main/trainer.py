@@ -269,6 +269,10 @@ if __name__ == "__main__":
             raise
 
     if args.val:
+        data = instantiate_from_config(config.data_validation)
+        data.setup()
+        for k in data.datasets:
+            logger.info(f"{k}, {data.datasets[k].__class__.__name__}, {len(data.datasets[k])}")
          trainer.validate(model, data)
     if args.test or not trainer.interrupted:
          trainer.test(model, data)
