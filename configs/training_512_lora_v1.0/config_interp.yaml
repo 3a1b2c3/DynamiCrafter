@@ -1,6 +1,6 @@
 model:
   pretrained_checkpoint: C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt
-  lora_path: C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\epoch=0-step=6.ckpt
+  lora_path: C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\epoch=0-step=3-v3.ckpt
   base_learning_rate: 1.0e-05
   scale_lr: False
   target: lvdm.models.ddpm3d.LatentVisualDiffusion
@@ -141,7 +141,7 @@ lightning:
     rank: 64
     alpha: 0.5
     dropout: 0.1
-    save_only_lora: False
+    save_only_lora: True
 
   trainer:
     benchmark: True

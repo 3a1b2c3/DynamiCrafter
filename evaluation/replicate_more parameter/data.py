@@ -1,3 +1,8 @@
+c
+
+
+
+
 
 
 # 10 biking along a wall    C:\workspace\cs231n\proj\data\kitti\videos\TRAIN\2011_09_26\2011_09_26_drive_0002_sync\image_03\data\001_result.jpg
@@ -184,14 +189,28 @@ ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\im
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\dataset\images_anonymized\images_anonymized\clip_585\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\66.mp4" 
 
 
+python run.py  --video_path C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\2011_09_26_KITTI.mp4  --save_folder workspace/examples_output  --height 384 --width 640 --low_memory_usage True --decode_chunk_size 6
+Took seconds: 23.69873809814453
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\construction_test_486.mp4" 
+ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\2011_09_26_KITTI.mp4" 
+
+file 'clip1.mp4'
+file 'clip2.mp4'
+file 'clip3.mp4'
+
+Step 3: Run ffmpeg
+bash
+Copy
+Edit
+ffmpeg -f concat -safe 0 -i inputs.txt -c copy output.mp4
 P = Period (start of duration spec)
 T = Time (starts the time section)
 00H = 0 Hours
 00M = 0 Minutes
 18S = 18 Seconds
 
- python ./main/trainer.py --base c:\workspace\cs231n\proj\DynamiCrafterLora\configs\training_512_lora_v1.0\config_interp.yaml  --train --name test --logdir"C:\workspace\cs231n\proj\DynamiCrafterLora\data" 
-
+python ./main/trainer.py --base c:\workspace\cs231n\proj\DynamiCrafterLora\configs\training_512_lora_v1.0\config_interp.yaml  --train --name test --logdir"C:\workspace\cs231n\proj\DynamiCrafterLora\data" 
+python c:\workspace\cs231n\proj\GeometryCrafter\visualize\vis_point_maps.py --video_path C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\2011_09_26_KITTI.mp4   --point_size .1 --data_path c:\workspace\cs231n\proj\GeometryCrafter\workspace\examples_output\2011_09_26_KITTI.npz
 ffmpeg -i input.hevc -c:v libx265 -crf 28 -preset slow -c:a aac -b:a 128k -movflags +faststart output.mp4
 
 2.238
