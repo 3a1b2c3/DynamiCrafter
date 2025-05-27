@@ -241,16 +241,17 @@ if __name__ == "__main__":
     #signal.signal(signal.SIGUSR1, melk)
     #signal.signal(signal.SIGUSR2, divein)
 
+    print(unknown,"\nargs", args.train, args.val, args)
     ## Running LOOP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     logger.info("***** Running the Loop *****")
-    if args.train:
-        ## DATA CONFIG >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        logger.info("***** Configing Data *****")
-        data = instantiate_from_config(config.data)
-        data.setup()
-        for k in data.datasets:
+    ## DATA CONFIG >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    logger.info("***** Configing Data *****")
+    data = instantiate_from_config(config.data)
+    data.setup()
+    for k in data.datasets:
             logger.info(f"{k}, {data.datasets[k].__class__.__name__}, {len(data.datasets[k])}")
 
+    if args.train:
         try:
             if "strategy" in lightning_config and lightning_config['strategy'].startswith('deepspeed'):
                 logger.info("<Training in DeepSpeed Mode>")
@@ -267,13 +268,13 @@ if __name__ == "__main__":
         except Exception:
             melk()
             raise
-    print("\nargs", args.val, args)
+
     data_val = instantiate_from_config(config.data_validation)
     data_val.setup()
     logger.info("***** Configing val Data ***** " + str(len(data_val.datasets)))
     for k in data_val.datasets:
         logger.info(f"{k}, {data_val.datasets[k].__class__.__name__}, {len(data_val.datasets[k])}")
     if args.val:
-        trainer.validate(model, data_val)
-    if args.test or not trainer.interrupted:
+        trainer.validate(model, data)
+    elif args.test or not trainer.interrupted:
         trainer.test(model, data_val)

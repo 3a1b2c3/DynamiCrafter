@@ -159,7 +159,7 @@ lightning:
       params:
         batch_frequency: 500
         to_local: False
-        max_images: 8
+        max_images: 7
         log_images_kwargs:
           ddim_steps: 50
           unconditional_guidance_scale: 7.5
