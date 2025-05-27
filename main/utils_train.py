@@ -139,7 +139,7 @@ def get_trainer_strategy(lightning_config):
 
 def load_checkpoints(model, model_cfg):
     pretrained_ckpt = model_cfg.pretrained_checkpoint
-    print(f"start loading checkpoint: {pretrained_ckpt}")
+    print(f"_______start loading checkpoint: {pretrained_ckpt}", model_cfg.lora_path)
     if "safetensors" in pretrained_ckpt:
         pl_sd = load_file(pretrained_ckpt)
     else:
@@ -170,7 +170,7 @@ def load_checkpoints(model, model_cfg):
         model.load_state_dict(state_dict_lora, strict=False)
         print(f"Lora loaded")
     except:
-        print(f"Could not load lora {lora_path}, no lora?")
+        print(f"____Could not load lora {lora_path}, no lora?")
 
     return model
 

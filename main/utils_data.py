@@ -105,7 +105,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
                           )
 
     def val_dataloader(self, shuffle=False):
-        return _val_dataloader(shuffle)
+        return self._val_dataloader(shuffle)
 
     def _test_dataloader(self, shuffle=False):
         try:
@@ -129,7 +129,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
                           collate_fn=self.collate_fn,
                           )
     def test_dataloader(self, shuffle=False):
-       return _test_dataloader(shuffle)
+       return self._test_dataloader(shuffle)
 
     def _predict_dataloader(self, shuffle=False):
         if isinstance(self.datasets['predict'], Txt2ImgIterableBaseDataset) or self.use_worker_init_fn:
