@@ -24,10 +24,11 @@ class LoraCheckpointIo(TorchCheckpointIO):
 
     @override
     def save_checkpoint(self, checkpoint: Dict[str, Any], path: _PATH, storage_options: Optional[Any] = None) -> None:
+        print(" ____save_checkpoint", path)
         if storage_options is not None:
             raise TypeError(
                 "`Trainer.save_checkpoint(..., storage_options=...)` with `storage_options` arg"
-                f" is not supported for `{self.__class__.__name__}`. Please implement your custom `CheckpointIO`"
+                f" is not supported for `{self.__class__.__name__}`. Please implement your custom `IO`"
                 " to define how you'd like to use `storage_options`."
             )
         fs = get_filesystem(path)
@@ -267,7 +268,7 @@ if __name__ == "__main__":
             #melk()
             raise
 
-    # if args.val:
-    #     trainer.validate(model, data)
-    # if args.test or not trainer.interrupted:
-    #     trainer.test(model, data)
+    if args.val:
+         trainer.validate(model, data)
+    if args.test or not trainer.interrupted:
+         trainer.test(model, data)
