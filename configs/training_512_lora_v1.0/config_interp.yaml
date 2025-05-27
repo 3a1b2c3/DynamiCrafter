@@ -134,7 +134,25 @@ data_validation:
     batch_size: 2
     num_workers: 1
     wrap: false
-    train:
+    validation:
+      target: lvdm.data.webvid.WebVid
+      params:
+        data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation
+        meta_path: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation.csv
+        video_length: 16
+        frame_stride: 6
+        load_raw_resolution: true
+        resolution: [320, 512]
+        spatial_transform: resize_center_crop
+        random_fs: true  ## if true, we uniformly sample fs with max_fs=frame_stride (above)
+
+data_test:
+  target: utils_data.DataModuleFromConfig
+  params:
+    batch_size: 2
+    num_workers: 1
+    wrap: false
+    test:
       target: lvdm.data.webvid.WebVid
       params:
         data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation

@@ -51,6 +51,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
         self.dataset_configs = dict()
         self.num_workers = num_workers if num_workers is not None else batch_size * 2
         self.use_worker_init_fn = use_worker_init_fn
+        print()
         if train is not None:
             self.dataset_configs["train"] = train
             self.train_dataloader = self._train_dataloader
@@ -103,6 +104,9 @@ class DataModuleFromConfig(pl.LightningDataModule):
                           collate_fn=self.collate_fn,
                           )
 
+    def val_dataloader(self, shuffle=False):
+        return _val_dataloader(shuffle)
+
     def _test_dataloader(self, shuffle=False):
         try:
             is_iterable_dataset = isinstance(self.datasets['train'], Txt2ImgIterableBaseDataset)
@@ -124,6 +128,8 @@ class DataModuleFromConfig(pl.LightningDataModule):
                           num_workers=self.num_workers, worker_init_fn=init_fn, shuffle=shuffle,
                           collate_fn=self.collate_fn,
                           )
+    def test_dataloader(self, shuffle=False):
+       return _test_dataloader(shuffle)
 
     def _predict_dataloader(self, shuffle=False):
         if isinstance(self.datasets['predict'], Txt2ImgIterableBaseDataset) or self.use_worker_init_fn:
