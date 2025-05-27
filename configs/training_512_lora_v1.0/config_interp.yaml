@@ -1,6 +1,6 @@
 model:
   pretrained_checkpoint: C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt
-  lora_path: C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\epoch=0-step=3-v3.ckpt
+  lora_path: C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\epoch=2-step=45.ckpt
   base_learning_rate: 1.0e-05
   scale_lr: False
   target: lvdm.models.ddpm3d.LatentVisualDiffusion
@@ -110,7 +110,6 @@ model:
         output_dim: 1024
         ff_mult: 4
         video_length: 16
-
 data:
   target: utils_data.DataModuleFromConfig
   params:
@@ -122,6 +121,24 @@ data:
       params:
         data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving
         meta_path: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving.csv
+        video_length: 16
+        frame_stride: 6
+        load_raw_resolution: true
+        resolution: [320, 512]
+        spatial_transform: resize_center_crop
+        random_fs: true  ## if true, we uniformly sample fs with max_fs=frame_stride (above)
+
+data_validation:
+  target: utils_data.DataModuleFromConfig
+  params:
+    batch_size: 2
+    num_workers: 1
+    wrap: false
+    train:
+      target: lvdm.data.webvid.WebVid
+      params:
+        data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation
+        meta_path: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation.csv
         video_length: 16
         frame_stride: 6
         load_raw_resolution: true
