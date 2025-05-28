@@ -675,7 +675,7 @@ class LatentDiffusion(DDPM):
         return self.decode_core(z, **kwargs)
     
     @torch.no_grad()
-    def get_batch_input(self, batch, random_uncond, return_first_stage_outputs=False, return_original_cond=False):
+    def get_batch_input(self, batch, random_uncond=False, return_first_stage_outputs=False, return_original_cond=False):
         ## video shape: b, c, t, h, w
         x = super().get_input(batch, self.first_stage_key)
 
@@ -1049,13 +1049,13 @@ class LatentVisualDiffusion(LatentDiffusion):
             for param in self.embedder.parameters():
                 param.requires_grad = False
 
-    def shared_step(self, batch, random_uncond, **kwargs):
+    def shared_step(self, batch, random_uncond=False, **kwargs):
         x, c, fs = self.get_batch_input(batch, random_uncond=random_uncond, return_fs=True)
         kwargs.update({"fs": fs.long()})
         loss, loss_dict = self(x, c, **kwargs)
         return loss, loss_dict
     
-    def get_batch_input(self, batch, random_uncond, return_first_stage_outputs=False, return_original_cond=False, return_fs=False, return_cond_frame=False, return_original_input=False, **kwargs):
+    def get_batch_input(self, batch, random_uncond=False, return_first_stage_outputs=False, return_original_cond=False, return_fs=False, return_cond_frame=False, return_original_input=False, **kwargs):
         ## x: b c t h w
         x = super().get_input(batch, self.first_stage_key)
         ## encode video frames x to z via a 2D encoder        

@@ -42,7 +42,7 @@ class WrappedDataset(Dataset):
 
 
 class DataModuleFromConfig(pl.LightningDataModule):
-    def __init__(self, batch_size, train=None, validation=None, test=None, predict=None,
+    def __init__(self, batch_size, train=True, validation=None, test=None, predict=None, # config
                  wrap=False, num_workers=None, shuffle_test_loader=False, use_worker_init_fn=False,
                  shuffle_val_dataloader=False, train_img=None,
                  test_max_n_samples=None):
@@ -51,7 +51,6 @@ class DataModuleFromConfig(pl.LightningDataModule):
         self.dataset_configs = dict()
         self.num_workers = num_workers if num_workers is not None else batch_size * 2
         self.use_worker_init_fn = use_worker_init_fn
-        print()
         if train is not None:
             self.dataset_configs["train"] = train
             self.train_dataloader = self._train_dataloader
@@ -64,7 +63,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
         if predict is not None:
             self.dataset_configs["predict"] = predict
             self.predict_dataloader = self._predict_dataloader
-
+        print("(validation, train, test", validation, train, test, self.val_dataloader)
         self.img_loader = None
         self.wrap = wrap
         self.test_max_n_samples = test_max_n_samples
@@ -75,6 +74,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
 
     def setup(self, stage=None):
         self.datasets = dict((k, instantiate_from_config(self.dataset_configs[k])) for k in self.dataset_configs)
+        print(self.datasets.keys(), self.datasets)
         if self.wrap:
             for k in self.datasets:
                 self.datasets[k] = WrappedDataset(self.datasets[k])
@@ -92,6 +92,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
         return loader
 
     def _val_dataloader(self, shuffle=False):
+        print("self.datasets.keys(0)", self.datasets.keys())
         if isinstance(self.datasets['validation'], Txt2ImgIterableBaseDataset) or self.use_worker_init_fn:
             init_fn = worker_init_fn
         else:
@@ -105,7 +106,8 @@ class DataModuleFromConfig(pl.LightningDataModule):
                           )
 
     def val_dataloader(self, shuffle=False):
-        return self._val_dataloader(shuffle)
+        # TODO
+        return self._train_dataloader()# self._val_dataloader(shuffle)
 
     def _test_dataloader(self, shuffle=False):
         try:

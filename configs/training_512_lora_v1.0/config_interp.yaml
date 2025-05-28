@@ -134,7 +134,7 @@ data_validation:
     batch_size: 2
     num_workers: 1
     wrap: false
-    validation:
+    train:
       target: lvdm.data.webvid.WebVid
       params:
         data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation
