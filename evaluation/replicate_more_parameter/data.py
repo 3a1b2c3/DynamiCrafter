@@ -1,5 +1,49 @@
-c
+ffmpeg -start_number 1 -i input%04d.png output%04d.jpg
 
+ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\stuttgart.txt" -filter:v fps=25   stuttgart.mp4 #-c copy 
+ffmpeg -f concat -safe 0 -i C:\workspace\cs231n\proj\DynamiCrafterLora\output\tokyo.txt -filter:v fps=10  -filter:v "fps=25;setpts=(18/3)*PTS"  tokyo.mp4 #3-c copy
+ffmpeg -f concat -safe 0 -i C:\workspace\cs231n\proj\DynamiCrafterLora\output\tokyo.txt -c copy tokyo_trimmmed.mp4
+ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\stuttgart.txt" -filter:v fps=25  stuttgart_trimmed.mp4
+ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of default=noprint_wrappers=1 input.mp4
+If you want to stretch to N seconds and your original video is D seconds, use:
+ffmpeg -i input.mp4 -filter:v "setpts=(18/3)*PTS" output.mp4
+
+-vf "trim=start_frame=I:end_frame=O+1, setpts=PTS-STARTPTS"
+ffmpeg -i input.mp4 -vf trim=start_frame=I:end_frame=O+1 -an output.mp4
+#new_duration = (100 - 1) / 25 = 3.96 seconds
+duration_in_seconds = 15/ 10 =  1.5
+duration_in_seconds = 14 / 10 =  1.4
+ffmpeg -i input.mp4 -t 1.4 -c copy trimmed.mp4
+ffmpeg -i C:/workspace/cs231n/proj/DynamiCrafterLora/output/out/tokyo/13._slowly_going_down_the_street_in_toky.mp4 -t 1.4 -c copy C:/workspace/cs231n/proj/DynamiCrafterLora/output/out/tokyo/13_tokyo_trimmed.mp4
+ffmpeg -i C:/workspace/cs231n/proj/DynamiCrafterLora/output/out/1._slowly_going_down_the_street_in_Stutt.mp4 -t 1.4 -c copy C:/workspace/cs231n/proj/DynamiCrafterLora/output/out/1_Stutt_trimmed.mp4
+
+ffmpeg -i input.mp4 -filter_complex "format=gbrp,tblend=all_mode=difference" output.mp4
+ffmpeg -i stuttgart_ground.mp4 stuttgart_trimmed.mp4 -filter_complex "[0:v][1:v]blend=all_mode=difference" -c:v libx264 -crf 18 -preset fast stuttgart_diff.mp4
+ffmpeg -i tokyot_ground.mp4 tokyo_trimmed.mp4 -filter_complex "[0:v][1:v]blend=all_mode=difference" -c:v libx264 -crf 18 -preset fast tokyo_diff.mp4
+
+r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"  % n.zfill(3)
+r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\020_result.jpg"
+
+ffmpeg -start_number 19 -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%03d_result.jpg"  -filter:v "setpts=(18/3)*PTS" -t 18 "stuttgart_ground.mp4"
+ffmpeg -start_number 13 -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\%03d_result.jpg" -filter:v "setpts=(19/3)*PTS"  -t 19 "tokyo_ground.mp4"
+
+
+#ffmpeg -f concat -i videos.txt -c copy output8.mp4
+FFmpeg has three concatenation methods:
+
+(echo file 'first file.mp4' & echo file 'second file.mp4' )>list.txt
+ffmpeg -safe 0 -f concat -i list.txt -c copy output.mp4
+or
+
+(for %i in (*.mp4) do @echo file '%i') > list.txt
+ffmpeg -safe 0 -f concat -i list.txt -c copy output.mp4
+
+1. concat video filter
+Use this method if your inputs do not have the same parameters (width, height, etc), or are not the same formats/codecs, or if you want to perform any filtering.
+
+Note that this method performs a re-encode of all inputs. If you want to avoid the re-encode, you could re-encode just the inputs that don't match so they share the same codec and other parameters, then use the concat demuxer to avoid re-encoding everything.
+
+ffmpeg -i opening.mkv -i episode.mkv -i ending.mkv -filter_complex "[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=3:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" output.mkv
 
 # 10 biking along a wall    C:\workspace\cs231n\proj\data\kitti\videos\TRAIN\2011_09_26\2011_09_26_drive_0002_sync\image_03\data\001_result.jpg
 ffmpeg  -start_number 1 -i "C:\workspace\cs231n\proj\data\kitti\videos\TRAIN\2011_09_26\2011_09_26_drive_0002_sync\image_03\data\%d_result.jpg" -c:v libx264 -r 10 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\10.mp4"
@@ -272,17 +316,22 @@ ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\VAL\2011_09_30_drive_0018_sync\im
 ## 29  
 ffmpeg -i C:\workspace\cs231n\proj\data\comma2k19\VAL\11\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\14.mp4"
 
+# 20 multifloor residental buildings 2121 
+ffmpeg -i "C:\workspace\cs231n\proj\data\malaga-urban-dataset-extract-04\New Folder 1\malaga-urban-dataset-extract-07\malaga-urban-dataset-extract-07\l\%03d_result.jpg" -filter:v fps=20 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\15.mp4"
+
 ########################## tst 
 
 ## 29  turning on high way village
 ffmpeg -i C:\workspace\cs231n\proj\data\comma2k19\Chunk_2\Chunk_3\99c94dc769b5d96e_2018-05-12--15-45-29\4\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\72.mp4"
 
-## 10 fps  dence
+## 29 fence
 ffmpeg -i C:\workspace\cs231n\proj\data\comma2k19\Chunk_2\Chunk_3\99c94dc769b5d96e_2018-05-13--12-07-39\19\video.hevc -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\73.mp4"
 
-## 10 fps  dence
+## 29 fps  fenced highway
 ffmpeg -i C:\workspace\cs231n\proj\data\comma2k19\Chunk_2\Chunk_3\99c94dc769b5d96e_2018-05-13--12-07-39\27\video.hevc   -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\74.mp4"
 
+## 29  elevayted highway 
+ffmpeg -i C:\workspace\cs231n\proj\data\comma2k19\Chunk_2\Chunk_2\b0c9d2329ad1606b_2018-10-09--15-48-37\22\video.hevc   -r 30000/1001 -filter:v "scale=532:-1,crop=512:350,crop=w=512:h=320:x=0:y=0" -crf 28 -preset slow "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\75.mp4"
 
 ## 10 fps  passing a village parking cars
 ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\VAL\2011_09_30_drive_0018_sync\image_03\data\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\75.mp4"
@@ -296,3 +345,65 @@ ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_689\images\%03d_res
 ## 10 fps  passing a village parking cars
 ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\VAL\2011_09_30_drive_0018_sync\image_03\data\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\78.mp4"
 
+# C:\workspace\cs231n\proj\DynamiCrafter\output
+# ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi ssim=stats_file=ssim_logfile.txt -f null -
+# ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi psnr=stats_file=psnr_logfile.txt -f null -
+# os.system("ffmpg")
+# ffmpeg -r 1/5 -start_number 261 -i "C:\workspace\cs231n\proj\data\kitti\TEST\selected\2011_09_26_drive_0091_sync\seq\Ped%d.jpg" -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+# ffmpeg -i input.lowfps.hevc -filter:v "minterpolate='fps=8'" output.120fps.hevc
+# ffmpeg -i input.hevc -filter "minterpolate='mi_mode=mci:mc_mode=aobmc:vsbmc=1'" output.hevc.
+# The filter's documentation contains the description of the available parameters and their values. –
+# ffmpeg -r 1/5 -start_number 0 -i C:\myimages\img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+
+# ffmpeg -i input1.ts -i input2.ts -i input3.ts -filter_complex "concat=n=3:v=1:a=0" -vn -y output.ts
+# ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\TEST\selected\2011_09_26_drive_0091_sync\seq\Ped%d.jpg"-filter:v fps=8  out.mp4
+
+# ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi psnr=stats_file=psnr_logfile.txt -f null -
+# ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi ssim=stats_file=ssim_logfile.txt -f null -
+# [Parsed_psnr_0 @ 054271e0] PSNR y:11.261841 u:28.780037 v:29.014721 average:12.985472 min:12.693955 max:14.083181
+
+# PSNR y:16.327098 u:31.281433 v:32.004562 average:18.024407 min:16.660268 max:42.886199
+# PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+# log file will contain a frame-wise list of the MSE and the PSNR for the Luma and Chroma planes
+
+# SSIM Y:0.221608 (1.088018) U:0.737887 (5.815110) V:0.796947 (6.923913) All:0.403545 (2.244220)
+# SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)  match
+# ffmpeg -start_number 24 -i "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\%d_result.jpg" -filter:v fps=10  "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out10fps.mp4"
+# 6 -> 16 2.6  = 27 fps
+# -vf "minterpolate=fps=25:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1"
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out10fps.mp4" -vf  "minterpolate=fps=26:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1"  "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out26fps.mp4"
+# ffmpeg -start_number 24 -i "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\%d_result.jpg" -vf minterpolate=fps=26:mi_mode=mci:me_mode=bidir:mc_mode=obmc:me=ds:vsbmc=1 "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out26fps.mp4"
+# 512 320
+# ffmpeg.exe -i "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out26fps.mp4" -i   -lavfi psnr=stats_file=psnr_logfile.txt -f null -
+# If your pixels are represented using 8 bits per sample, the maximum possible pixel value of the image is 255. 20*log10(255) = 48 dB the mean squared error (MSE) of noise is not considered yet.
+#  The typical compression ratio of jpeg is no less than 7. In that case the MSE is around 0.224, and the corresponding PSNR is 54 dB. So you probably will not get the PSNR as high as 63 dB.
+# mediainfo --Output="Video;%FrameCount%" input.avi
+# PSNR y:14.828602 u:35.186791 v:36.502819 average:16.572168 min:15.438353 max:20.310102
+# SSIM Y:0.401351 (2.228279) U:0.864741 (8.688329) V:0.891021 (9.626574) All:0.560194 (3.567393)
+# ffmpeg -i input.mp4 -filter_complex "format=gbrp,tblend=all_mode=difference" output.mp4
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out10fps.mp4"  -i c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\train_approaches.mp4  -filter_complex "blend=all_mode=difference" -c:v libx265 -crf 18 -c:a copy c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\difference.mp4
+# ffmpeg -y -i "%~1" -i "%~2" -filter_complex "[1:v]format=yuva444p,lut=c3=128,negate[video2withAlpha],[0:v][video2withAlpha]overlay[out]" -map [out] "%~n1-output%~x1"
+# ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi libvmaf="model_path=vmaf_v0.6.1.pkl":log_path=vmaf_logfile.txt -f null -
+
+
+# ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi libvmaf="model_path=vmaf_v0.6.1.pkl":log_path=vmaf_logfile.txt -f null -
+# ffmpeg -i "c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\suburb_concatenated.mp4"  -vf "format=rgb24,histogram=display_mode=overlay" "C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\histo.mp4"
+
+# C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1
+# ffmpeg -start_number 97 -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1\%d_result.jpg" -filter:v fps=10  "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1\out10fps.mp4"
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1\out10fps.mp4" -vf  "minterpolate=fps=26:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1" "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1\out25fps.mp4"
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1\out25fps.mp4" -i  "C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\city_concatenated.mp4"  -filter_complex "format=gbrp,tblend=all_mode=difference" "C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\city_diff.mp4"
+# ffmpeg.exe -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1\out25fps.mp4" -i  "C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\city_concatenated.mp4" # -lavfi ssim=stats_file=ssim_logfile.txt -f null -
+# ffmpeg.exe -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\seq1\out25fps.mp4" -i  "C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\city_concatenated.mp4"  -lavfi psnr=stats_file=psnr_logfile.txt -f null -traion
+
+# C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq
+# ffmpeg -start_number 210 -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\%d_result.jpg" -pix_fmt yuv420p  -filter:v fps=10  "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\out10fps.mp4"
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\out10fps.mp4" -vf  "minterpolate=fps=26:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1" "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\out26fps.mp4"
+# ffmpeg -i "c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\suburb_concatenated.mp4"  -vf "format=rgb24,histogram=display_mode=overlay" "C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\histo.mp4"
+# ffmpeg -i C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\slowly_going_down_the_suburbian_street.mp4 -i  C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\slowly_going_down_the_suburbian_street_m.mp4 -sar 1:1 -filter_complex "concat=n=2:v=1:a=0" -vn -y C:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\suburb_concatenated.mp4
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out10fps.mp4" -vf  "minterpolate=fps=27:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1"  "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out27fps.mp4"
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\out10fps.mp4" -vf  "minterpolate=fps=27:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1"  "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\out27fps.mp4"
+# ffmpeg -i  "C:\workspace\cs231n\proj\data\kitti\TEST\image_03\data_strassenbahn\seq1\out26fps.mp4"  -i c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\train_approaches.mp4  -filter_complex "blend=all_mode=difference" -c:v libx265 -crf 18 -c:a copy c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\difference_t27fps.mp4
+# First input link top parameters (size 512x320, SAR 1:1) do not match the corresponding second input link bottom parameters (512x320, SAR 0:1
+# ffmpeg -i  C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\out26fps.mp4 -i c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\suburb_concatenated.mp4  -filter_complex "format=gbrp,blend=all_mode=difference" -c:v libx265 -crf 18 -c:a copy c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\difference_t26fps.mp4
+# ffmpeg.exe -i  C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\seq\out26fps.mp4 -i c:\workspace\cs231n\proj\DynamiCrafter\output\experiments\rec\suburb_concatenated.mp4  -lavfi psnr=stats_file=psnr_logfile.txt -f null -
