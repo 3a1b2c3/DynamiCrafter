@@ -175,7 +175,7 @@ lightning:
     enabled: True
     rank: 64
     alpha: 0.5
-    dropout: 0.3
+    dropout: 0.35
     save_only_lora: True
 
   trainer:
