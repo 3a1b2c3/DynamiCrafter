@@ -201,7 +201,6 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 image1_path = r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_551\images\\%s_result.jpg"
 prompt= "a busy crossing in tokyo"
 recursive_predict(image1_path, prompt, 1, 100, 6)
-assert 1==2
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0001_sync\image_03\data\%s_result.jpg"
 recursive_predict(image1_path, "a train rides on the side off the road", 1, 108, 6)
