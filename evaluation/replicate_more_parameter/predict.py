@@ -138,7 +138,7 @@ class Predictor(BasePredictor):
         return i2v_output_video
 
 def recursive_predict(path1, prompt, start, end, step=6):
-    for i in range(1, start, end, step=6):
+    for i in range(1, start, end, 6):
         n= str(i)
         image1_path = (path1 % n.zfill(3)        )
         n= str(i + 6)
@@ -176,7 +176,7 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\image_03_straba\data_strassenbahn\%s_result.jpg"
-recursive_predict(image1_path, prompt="a train on te side off the road", 1, 115, step=6):
+recursive_predict(image1_path, "a train on te side off the road", 1, 115, step=6)
 
 for i in range(1, 99, 6):
     n= str(i)
