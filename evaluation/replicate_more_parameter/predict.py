@@ -157,8 +157,8 @@ def recursive_predict(path1, prompt, start, end, img_step=6,
         image2_path = path1 % n.zfill(3)
         #assert os.path.exists(image1_path)
         image1 = Image.open(image1_path)
-        assert os.path.exists(image2_path)
-        #image2 = Image.open(image2_path)
+        #assert os.path.exists(image2_path)
+        image2 = Image.open(image2_path)
         res6 = p.predict(image1_path,
                 image2_path,
                 prompt,
