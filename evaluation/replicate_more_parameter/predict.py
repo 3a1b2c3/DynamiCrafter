@@ -138,7 +138,7 @@ class Predictor(BasePredictor):
         return i2v_output_video
 
 def recursive_predict(path1, prompt, start, end, step=6):
-    for i in range(1, start, end, 6):
+    for i in range(start, end, 6):
         n= str(i)
         image1_path = (path1 % n.zfill(3)        )
         n= str(i + 6)
