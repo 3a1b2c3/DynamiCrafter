@@ -95,8 +95,8 @@ class Predictor(BasePredictor):
         prompt,
         steps: int = 150, #Input(default=150),
         cfg_scale: float = 12, #Input(default=7.5),
-        eta: float = 0.0
-        fs: int = 10
+        eta: float = 0.0,
+        fs: int = 10,
         seed: int =22306
         # image1_path: Path = Input(description="Input Image 1"),
         # image2_path: Path = Input(description="Input Image 2"),
