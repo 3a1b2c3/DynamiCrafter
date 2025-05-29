@@ -7,14 +7,21 @@ os.chdir(r"C:\workspace\cs231n\proj\DynamiCrafterLora")
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafter\checkpoints\dynamicrafter_256_v1\dynamicrafter_512_interp_v1.ckpt"
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\lora\model_train_epoch=0-step=9_applied.ckpt"
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train_epoch=0-step=3-v2_applied.ckpt"
-#ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt"
+ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt"
 # C:\workspace\cs231n\proj\DynamiCrafter\configs\training_512_v1.0\config_interp.yaml
 # python apply_lora.py --format ckpt --base_model="C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt" --lora=C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\old\epoch=0-step=9.ckpt --alpha=1.0
 directory = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output"
 # C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\old\epoch=0-step=9.ckpt
 
-
 from PIL import Image
+n  = "1"
+image1_path = (
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg" % n.zfill(3)
+    )
+
+assert os.path.exists( image1_path)
+image1 = Image.open(image1_path)
+
 import numpy as np
 import torch
 from scripts.gradio.i2v_test_application import Image2Video
@@ -130,8 +137,23 @@ class Predictor(BasePredictor):
         )
         return i2v_output_video
 
+def recursive_predict(path1, prompt, start, end, step=6):
+    for i in range(1, start, end, step=6):
+        n= str(i)
+        image1_path = (path1 % n.zfill(3)        )
+        n= str(i + 6)
+        image2_path = (path1 % n.zfill(3)        )
+        assert os.path.exists( image1_path)
+        image1 = Image.open(image1_path)
+        assert os.path.exists( image2_path)
+        image2 = Image.open(image2_path)
+        res6 = p.predict(
+            image1_path=image1_path,
+            prompt= str(i) + prompt
+        )
+    return n
 
-p10 = Predictor()
+#p10 = Predictor()
 p = Predictor()
 p.setup(
     ckpt=ckpt,
@@ -151,21 +173,46 @@ configs/inference_512_v1.0.yaml config_file: {'model': {'target': 'lvdm.models.d
 python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml --ckpt <path/to/ldmvfi-vqflow-f32-c256-concat_max.ckpt> --dataset Middlebury_others --metrics PSNR SSIM LPIPS \
 --data_dir <path/to/data/dir> --out_dir eval_results/ldmvfi-vqflow-f32-c256-concat_max/  --use_ddim
 """
+
+
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\image_03_straba\data_strassenbahn\%s_result.jpg"
+recursive_predict(image1_path, prompt="a train on te side off the road", 1, 115, step=6):
+
 for i in range(1, 99, 6):
     n= str(i)
     image1_path = (
-        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\images\%s_result.jpg" % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg" % n.zfill(3)
     )
     n= str(i + 6)
     image2_path = (
-        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\\%s_result.jpg"  % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"  % n.zfill(3)
     )
-    res6 = p.predict(
-        image1_path=image1_path,
-        image2_path=image2_path,
-        prompt= str(i) + ". slowly going down the street in tokyo next to a construction site",
+    print()
+    assert os.path.exists( image1_path)
+    image1 = Image.open(image1_path)
+    assert os.path.exists( image2_path)
+    image2 = Image.open(image2_path)
+    #res6 = p.predict(
+    #    image1_path=image1_path,
+    #    prompt= str(i) + ". discovering Tokyo backlanes",
+    #)
+
+for i in range(1, 99, 6):
+    n= str(i)
+    image1_path = (
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg" % n.zfill(3)
     )
-    
+    n= str(i + 6)
+    assert os.path.exists( image1_path)
+    assert os.path.exists( image2_path)
+    image2_path = (
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"  % n.zfill(3)
+    )
+    #res6 = p.predict(
+    #    image1_path=image1_path,
+    #    prompt= str(i) + "_ walking down a Tokyo backlane",
+    #)
+
     
 for i in range(1, 238, 6):
     n= str(i)
@@ -179,12 +226,11 @@ for i in range(1, 238, 6):
     res6 = p.predict(
         image1_path=image1_path,
         image2_path=image2_path,
-        prompt= str(i) + ". slowly going down the street in Stuttgart",
+        prompt= str(i) + "_ slowly going down the street in Stuttgart",
     )
     
     print("t1:", t1 - t0)
     raise AttributeError("tokyo")
-
 
 
 
