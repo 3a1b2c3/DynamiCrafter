@@ -149,6 +149,7 @@ def recursive_predict(path1, prompt, start, end, img_step=6,
         fs=10,
         seed=122
 ):
+    print("starting:", path1)
     for i in range(start, end, img_step):
         n = str(i)
         image1_path = path1 % n.zfill(3)
@@ -192,6 +193,10 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 --data_dir <path/to/data/dir> --out_dir eval_results/ldmvfi-vqflow-f32-c256-concat_max/  --use_ddim
 """
 
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\%s_result.jpg"
+prompt= "Going down a subrbian leavy empty road"
+recursive_predict(image1_path, prompt, 230, 500, 6)
+
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\image_03_straba\data_strassenbahn\%s_result.jpg"
 #recursive_predict(image1_path, "a train rides on the side off the road", 1, 115, 6)
@@ -213,6 +218,7 @@ image1_path = (
 )
 prompt= "discovering Tokyo backlanes"
 recursive_predict(image1_path, prompt, 1, 99, 6)
+
 
 
 assert 1 == 2
