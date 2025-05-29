@@ -164,8 +164,8 @@ def recursive_predict(path1, prompt, start, end, img_step=6,
                     image2_path,
                     str("i .") + prompt,
                     steps=80, #steps=50,
-                    cfg_scale=8,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
-                    eta=.5, # deterministic   eta=1.0
+                    cfg_scale=12,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
+                    eta=.8, # deterministic   eta=1.0
                     fs=10,
                     seed=122
                     )
