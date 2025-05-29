@@ -162,7 +162,7 @@ def recursive_predict(path1, prompt, start, end, img_step=6,
             image2 = Image.open(image2_path)
             res6 = p.predict(image1_path,
                     image2_path,
-                    prompt,
+                    str("i .") + prompt,
                     steps=80, #steps=50,
                     cfg_scale=8,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
                     eta=.5, # deterministic   eta=1.0
@@ -196,6 +196,12 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 --data_dir <path/to/data/dir> --out_dir eval_results/ldmvfi-vqflow-f32-c256-concat_max/  --use_ddim
 """
 
+
+# for i in range(1, 238, 6):
+image1_path = r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_551\images\\%s_result.jpg"
+prompt= "a busy crossing in tokyo"
+recursive_predict(image1_path, prompt, 1, 100, 6)
+assert 1==2
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0001_sync\image_03\data\%s_result.jpg"
 recursive_predict(image1_path, "a train rides on the side off the road", 1, 108, 6)
