@@ -194,15 +194,31 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\image_03_straba\data_strassenbahn\%s_result.jpg"
-recursive_predict(image1_path, "a train on te side off the road", 1, 115, step=6)
-assert 1 == 2
+recursive_predict(image1_path, "a train rides on the side off the road", 1, 115, 6)
+
+
+# for i in range(1, 238, 6):
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
+prompt= "slowly going down the street in Stuttgart",
+recursive_predict(image1_path, prompt, 1, 238, 6)
+
 # for i in range(1, 99, 6):
 image1_path = (
     r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
 )
-# for i in range(1, 238, 6):
-image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
- prompt=str(i) + "_ slowly going down the street in Stuttgart",
+prompt= "slowly going down the street in Tokyo",
+recursive_predict(image1_path, prompt, 1, 99, 6)
+
+
+# for i in range(1, 99, 6):
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"
+)
+prompt= "discovering Tokyo backlanes,
+recursive_predict(image1_path, prompt, 1, 99, 6)
+
+
+assert 1 == 2
 
 for i in range(1, 99, 6):
     n = str(i)
