@@ -126,7 +126,7 @@ class Predictor(BasePredictor):
             fs,
             seed,
         )
-        # image, prompt, steps=50, cfg_scale=7.5, eta=1.0, fs=3, seed=123, image2=None):
+        #    def get_image(self, image, prompt, steps=50, cfg_scale=7.5, eta=1.0, fs=3, seed=123, image2=None):
         i2v_output_video = self.image2video.get_image(
             image1_np, prompt, steps, cfg_scale, eta, fs, seed, image2_np
         )
@@ -155,10 +155,10 @@ def recursive_predict(path1, prompt, start, end, img_step=6,
         image1_path = path1 % n.zfill(3)
         n = str(i + 6)
         image2_path = path1 % n.zfill(3)
-        assert os.path.exists(image1_path)
+        #assert os.path.exists(image1_path)
         image1 = Image.open(image1_path)
         assert os.path.exists(image2_path)
-        image2 = Image.open(image2_path)
+        #image2 = Image.open(image2_path)
         res6 = p.predict(image1_path,
                 image2_path,
                 prompt,
@@ -193,18 +193,14 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 --data_dir <path/to/data/dir> --out_dir eval_results/ldmvfi-vqflow-f32-c256-concat_max/  --use_ddim
 """
 
-image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\%s_result.jpg"
-prompt= "Going down a subrbian leavy empty road"
-recursive_predict(image1_path, prompt, 230, 500, 6)
 
-
-image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\image_03_straba\data_strassenbahn\%s_result.jpg"
-#recursive_predict(image1_path, "a train rides on the side off the road", 1, 115, 6)
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0001_sync\image_03\data\%s_result.jpg"
+recursive_predict(image1_path, "a train rides on the side off the road", 1, 108, 6)
 
 # for i in range(1, 238, 6):
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
 prompt= "slowly going down the street in Stuttgart"
-recursive_predict(image1_path, prompt, 1, 238, 6)
+#recursive_predict(image1_path, prompt, 1, 238, 6)
 
 # for i in range(1, 99, 6):
 image1_path = r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
@@ -219,6 +215,10 @@ image1_path = (
 prompt= "discovering Tokyo backlanes"
 recursive_predict(image1_path, prompt, 1, 99, 6)
 
+
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\%s_result.jpg"
+prompt= "Going down a subrbian leavy empty road"
+recursive_predict(image1_path, prompt, 300, 500, 6)
 
 
 assert 1 == 2
