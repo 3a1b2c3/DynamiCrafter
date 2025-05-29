@@ -90,14 +90,14 @@ class Predictor(BasePredictor):
 
     def predict(
         self,
-        image1_path: Path = Input(description="Input Image 1"),
-        image2_path: Path = Input(description="Input Image 2"),
-        prompt: str = Input(default="a smiling girl"),
-        steps: int = Input(default=150),
-        cfg_scale: float = Input(default=7.5),
-        eta: float = Input(default=0.0),
-        fs: int = Input(default=10),
-        seed: int = Input(default=22306),
+        image1_path: Path,
+        image2_path: Path,
+        prompt,
+        steps: int = 150, #Input(default=150),
+        cfg_scale: float = 12, #Input(default=7.5),
+        eta: float = 0.0
+        fs: int = 10
+        seed: int =22306
         # image1_path: Path = Input(description="Input Image 1"),
         # image2_path: Path = Input(description="Input Image 2"),
         # prompt: str = Input(default='a smiling girl'),
@@ -107,9 +107,11 @@ class Predictor(BasePredictor):
         # fs: int = Input(default=5),
         # seed: int = Input(default=12306),
     ) -> Path:
+        assert isinstance( image1_path, str)
         image1 = Image.open(image1_path)
         if image1.mode == "RGBA":
             image1 = image1.convert("RGB")
+        print("image2_path: ", image2_path)
         image2 = Image.open(image2_path)
         if image2.mode == "RGBA":
             image2 = image2.convert("RGB")
@@ -140,8 +142,14 @@ class Predictor(BasePredictor):
         return i2v_output_video
 
 
-def recursive_predict(path1, prompt, start, end, step=6):
-    for i in range(start, end, 6):
+def recursive_predict(path1, prompt, start, end, img_step=6,
+        steps=80, #steps=50,
+        cfg_scale=8,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
+        eta=.5, # deterministic   eta=1.0
+        fs=10,
+        seed=122
+):
+    for i in range(start, end, img_step):
         n = str(i)
         image1_path = path1 % n.zfill(3)
         n = str(i + 6)
@@ -150,7 +158,16 @@ def recursive_predict(path1, prompt, start, end, step=6):
         image1 = Image.open(image1_path)
         assert os.path.exists(image2_path)
         image2 = Image.open(image2_path)
-        res6 = p.predict(image1_path=image1_path, prompt=str(i) + prompt)
+        res6 = p.predict(image1_path,
+                image2_path,
+                prompt,
+                steps=80, #steps=50,
+                cfg_scale=8,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
+                eta=.5, # deterministic   eta=1.0
+                fs=10,
+                seed=122
+                )
+
     return n
 
 
