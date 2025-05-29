@@ -14,12 +14,14 @@ directory = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output"
 # C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\old\epoch=0-step=9.ckpt
 
 from PIL import Image
-n  = "1"
-image1_path = (
-        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg" % n.zfill(3)
-    )
 
-assert os.path.exists( image1_path)
+n = "1"
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"
+    % n.zfill(3)
+)
+
+assert os.path.exists(image1_path)
 image1 = Image.open(image1_path)
 
 import numpy as np
@@ -137,23 +139,22 @@ class Predictor(BasePredictor):
         )
         return i2v_output_video
 
+
 def recursive_predict(path1, prompt, start, end, step=6):
     for i in range(start, end, 6):
-        n= str(i)
-        image1_path = (path1 % n.zfill(3)        )
-        n= str(i + 6)
-        image2_path = (path1 % n.zfill(3)        )
-        assert os.path.exists( image1_path)
+        n = str(i)
+        image1_path = path1 % n.zfill(3)
+        n = str(i + 6)
+        image2_path = path1 % n.zfill(3)
+        assert os.path.exists(image1_path)
         image1 = Image.open(image1_path)
-        assert os.path.exists( image2_path)
+        assert os.path.exists(image2_path)
         image2 = Image.open(image2_path)
-        res6 = p.predict(
-            image1_path=image1_path,
-            prompt= str(i) + prompt
-        )
+        res6 = p.predict(image1_path=image1_path, prompt=str(i) + prompt)
     return n
 
-#p10 = Predictor()
+
+# p10 = Predictor()
 p = Predictor()
 p.setup(
     ckpt=ckpt,
@@ -178,61 +179,74 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\image_03_straba\data_strassenbahn\%s_result.jpg"
 recursive_predict(image1_path, "a train on te side off the road", 1, 115, step=6)
 
+assert 1 == 2
+# for i in range(1, 99, 6):
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
+)
+# for i in range(1, 238, 6):
+image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
+
+
 for i in range(1, 99, 6):
-    n= str(i)
+    n = str(i)
     image1_path = (
-        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg" % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"
+        % n.zfill(3)
     )
-    n= str(i + 6)
+    n = str(i + 6)
     image2_path = (
-        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"  % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"
+        % n.zfill(3)
     )
     print()
-    assert os.path.exists( image1_path)
+    assert os.path.exists(image1_path)
     image1 = Image.open(image1_path)
-    assert os.path.exists( image2_path)
+    assert os.path.exists(image2_path)
     image2 = Image.open(image2_path)
-    #res6 = p.predict(
+    # res6 = p.predict(
     #    image1_path=image1_path,
     #    prompt= str(i) + ". discovering Tokyo backlanes",
-    #)
+    # )
 
 for i in range(1, 99, 6):
-    n= str(i)
+    n = str(i)
     image1_path = (
-        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg" % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
+        % n.zfill(3)
     )
-    n= str(i + 6)
-    assert os.path.exists( image1_path)
-    assert os.path.exists( image2_path)
+    n = str(i + 6)
+    assert os.path.exists(image1_path)
+    assert os.path.exists(image2_path)
     image2_path = (
-        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"  % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
+        % n.zfill(3)
     )
-    #res6 = p.predict(
-    #    image1_path=image1_path,
-    #    prompt= str(i) + "_ walking down a Tokyo backlane",
-    #)
+    res6 = p.predict(
+        image1_path=image1_path,
+        prompt=str(i) + "_ walking down a Tokyo backlane",
+    )
 
-    
+
 for i in range(1, 238, 6):
-    n= str(i)
+    n = str(i)
     image1_path = (
-        r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg" % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
+        % n.zfill(3)
     )
-    n= str(i + 6)
+    n = str(i + 6)
     image2_path = (
-        r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"  % n.zfill(3)
+        r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
+        % n.zfill(3)
     )
     res6 = p.predict(
         image1_path=image1_path,
         image2_path=image2_path,
-        prompt= str(i) + "_ slowly going down the street in Stuttgart",
+        prompt=str(i) + "_ slowly going down the street in Stuttgart",
     )
-    
+
     print("t1:", t1 - t0)
     raise AttributeError("tokyo")
-
-
 
 
 print("t1:", t1 - t0)
