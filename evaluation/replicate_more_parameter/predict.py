@@ -150,24 +150,27 @@ def recursive_predict(path1, prompt, start, end, img_step=6,
         seed=122
 ):
     print("starting:", path1)
-    for i in range(start, end, img_step):
-        n = str(i)
-        image1_path = path1 % n.zfill(3)
-        n = str(i + 6)
-        image2_path = path1 % n.zfill(3)
-        #assert os.path.exists(image1_path)
-        image1 = Image.open(image1_path)
-        #assert os.path.exists(image2_path)
-        image2 = Image.open(image2_path)
-        res6 = p.predict(image1_path,
-                image2_path,
-                prompt,
-                steps=80, #steps=50,
-                cfg_scale=8,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
-                eta=.5, # deterministic   eta=1.0
-                fs=10,
-                seed=122
-                )
+    try:
+        for i in range(start, end, img_step):
+            n = str(i)
+            image1_path = path1 % n.zfill(3)
+            n = str(i + 6)
+            image2_path = path1 % n.zfill(3)
+            #assert os.path.exists(image1_path)
+            image1 = Image.open(image1_path)
+            #assert os.path.exists(image2_path)
+            image2 = Image.open(image2_path)
+            res6 = p.predict(image1_path,
+                    image2_path,
+                    prompt,
+                    steps=80, #steps=50,
+                    cfg_scale=8,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
+                    eta=.5, # deterministic   eta=1.0
+                    fs=10,
+                    seed=122
+                    )
+    except Exception as e:
+        print(e)
 
     return n
 
