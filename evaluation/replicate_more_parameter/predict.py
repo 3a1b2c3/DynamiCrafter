@@ -8,6 +8,7 @@ ckpt = r"C:\workspace\cs231n\proj\DynamiCrafter\checkpoints\dynamicrafter_256_v1
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\lora\model_train_epoch=0-step=9_applied.ckpt"
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train_epoch=0-step=3-v2_applied.ckpt"
 ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt"
+ckpt = r"C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train_epoch=0-step=6_applied.ckpt"
 # C:\workspace\cs231n\proj\DynamiCrafter\configs\training_512_v1.0\config_interp.yaml
 # python apply_lora.py --format ckpt --base_model="C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt" --lora=C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\old\epoch=0-step=9.ckpt --alpha=1.0
 directory = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output"
@@ -93,11 +94,11 @@ class Predictor(BasePredictor):
         image1_path: Path,
         image2_path: Path,
         prompt,
-        steps: int = 150, #Input(default=150),
-        cfg_scale: float = 12, #Input(default=7.5),
+        steps: int = 150,  # Input(default=150),
+        cfg_scale: float = 12,  # Input(default=7.5),
         eta: float = 0.0,
         fs: int = 10,
-        seed: int =22306
+        seed: int = 22306,
         # image1_path: Path = Input(description="Input Image 1"),
         # image2_path: Path = Input(description="Input Image 2"),
         # prompt: str = Input(default='a smiling girl'),
@@ -107,7 +108,7 @@ class Predictor(BasePredictor):
         # fs: int = Input(default=5),
         # seed: int = Input(default=12306),
     ) -> Path:
-        assert isinstance( image1_path, str)
+        assert isinstance(image1_path, str)
         image1 = Image.open(image1_path)
         if image1.mode == "RGBA":
             image1 = image1.convert("RGB")
@@ -142,34 +143,40 @@ class Predictor(BasePredictor):
         return i2v_output_video
 
 
-def recursive_predict(path1, prompt, start, end, img_step=6,
-        steps=80, #steps=50,
-        cfg_scale=8,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
-        eta=.5, # deterministic   eta=1.0
-        fs=10,
-        seed=122
+def recursive_predict(
+    path1,
+    prompt,
+    start,
+    end,
+    img_step=6,
+    steps=80,  # steps=50,
+    cfg_scale=8,  # >10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
+    eta=0.5,  # deterministic   eta=1.0
+    fs=10,
+    seed=122,
+    prefix="lora_",
 ):
-
     try:
         for i in range(start, end, img_step):
             n = str(i)
             image1_path = path1 % n.zfill(3)
             n = str(i + 6)
             image2_path = path1 % n.zfill(3)
-            #assert os.path.exists(image1_path)
+            # assert os.path.exists(image1_path)
             image1 = Image.open(image1_path)
-            #assert os.path.exists(image2_path)
+            # assert os.path.exists(image2_path)
             image2 = Image.open(image2_path)
-            print("starting:", path1,  str(i) +(" .") + prompt)
-            res6 = p.predict(image1_path,
-                    image2_path,
-                     str(i) +(" .") + prompt,
-                    steps=80, #steps=50,
-                    cfg_scale=12,#>10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
-                    eta=.8, # deterministic   eta=1.0
-                    fs=10,
-                    seed=122
-                    )
+            print("starting:", path1, str(i) + (" .") + prompt)
+            res6 = p.predict(
+                image1_path,
+                image2_path,
+                str(i) + prefix + (" .") + prompt,
+                steps=80,  # steps=50,
+                cfg_scale=12,  # >10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
+                eta=0.8,  # deterministic   eta=1.0
+                fs=10,
+                seed=122,
+            )
     except Exception as e:
         print(e)
 
@@ -181,7 +188,7 @@ p = Predictor()
 p.setup(
     ckpt=ckpt,
     save_fps=10,
-    directory=r"C:\workspace\cs231n\proj\DynamiCrafterLora\output"
+    directory=r"C:\workspace\cs231n\proj\DynamiCrafterLora\output",
 )
 img_folder = r"C:\workspace\cs231n\proj\data\kitti\TEST\selected"
 img_folder_kitti = r"C:\workspace\cs231n\proj\data\kitti\TEST"
@@ -199,8 +206,10 @@ python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml -
 
 
 # for i in range(1, 238, 6):
-image1_path = r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_551\images\\%s_result.jpg"
-prompt= "a busy crossing in tokyo"
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_551\images\\%s_result.jpg"
+)
+prompt = "a busy crossing in tokyo"
 recursive_predict(image1_path, prompt, 1, 100, 6)
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0001_sync\image_03\data\%s_result.jpg"
@@ -208,12 +217,14 @@ recursive_predict(image1_path, "a train rides on the side off the road", 1, 108,
 
 # for i in range(1, 238, 6):
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
-prompt= "slowly going down the street in Stuttgart"
-#recursive_predict(image1_path, prompt, 1, 238, 6)
+prompt = "slowly going down the street in Stuttgart"
+# recursive_predict(image1_path, prompt, 1, 238, 6)
 
 # for i in range(1, 99, 6):
-image1_path = r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
-prompt= "slowly going down the street in Tokyo"
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
+)
+prompt = "slowly going down the street in Tokyo"
 recursive_predict(image1_path, prompt, 1, 99, 6)
 
 
@@ -221,12 +232,12 @@ recursive_predict(image1_path, prompt, 1, 99, 6)
 image1_path = (
     r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"
 )
-prompt= "discovering Tokyo backlanes"
+prompt = "discovering Tokyo backlanes"
 recursive_predict(image1_path, prompt, 1, 99, 6)
 
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\%s_result.jpg"
-prompt= "Going down a subrbian leavy empty road"
+prompt = "Going down a subrbian leavy empty road"
 recursive_predict(image1_path, prompt, 300, 500, 6)
 
 
