@@ -170,7 +170,7 @@ def recursive_predict(
             res6 = p.predict(
                 image1_path,
                 image2_path,
-                str(i) + prefix + (" .") + prompt,
+                str(img_step) + ("_st_") + str(i) + prefix + (" .") + prompt,
                 steps=80,  # steps=50,
                 cfg_scale=12,  # >10	Strongly follows the conditioning – may become overly sharp or brittle  cfg_scale=7.5,
                 eta=0.8,  # deterministic   eta=1.0
@@ -203,14 +203,18 @@ configs/inference_512_v1.0.yaml config_file: {'model': {'target': 'lvdm.models.d
 python evaluate.py --config configs/ldm/ldmvfi-vqflow-f32-c256-concat_max.yaml --ckpt <path/to/ldmvfi-vqflow-f32-c256-concat_max.ckpt> --dataset Middlebury_others --metrics PSNR SSIM LPIPS \
 --data_dir <path/to/data/dir> --out_dir eval_results/ldmvfi-vqflow-f32-c256-concat_max/  --use_ddim
 """
-
+image1_path = (
+    r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\020_result.jpg"
+)
+prompt = "slowly going down the street in Tokyo next to constructon"
+recursive_predict(image1_path, prompt, 1, 100, 3)
 
 # for i in range(1, 238, 6):
 image1_path = (
     r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_551\images\\%s_result.jpg"
 )
 prompt = "a busy crossing in tokyo"
-recursive_predict(image1_path, prompt, 1, 100, 6)
+recursive_predict(image1_path, prompt, 1, 100, 3)
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0001_sync\image_03\data\%s_result.jpg"
 recursive_predict(image1_path, "a train rides on the side off the road", 1, 108, 6)
@@ -218,14 +222,15 @@ recursive_predict(image1_path, "a train rides on the side off the road", 1, 108,
 # for i in range(1, 238, 6):
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%s_result.jpg"
 prompt = "slowly going down the street in Stuttgart"
-# recursive_predict(image1_path, prompt, 1, 238, 6)
+recursive_predict(image1_path, prompt, 1, 238, 3)
 
 # for i in range(1, 99, 6):
 image1_path = (
     r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%s_result.jpg"
 )
 prompt = "slowly going down the street in Tokyo"
-recursive_predict(image1_path, prompt, 1, 99, 6)
+recursive_predict(image1_path, prompt, 1, 99, 3)
+
 
 
 # for i in range(1, 99, 6):
@@ -233,12 +238,12 @@ image1_path = (
     r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%s_result.jpg"
 )
 prompt = "discovering Tokyo backlanes"
-recursive_predict(image1_path, prompt, 1, 99, 6)
+recursive_predict(image1_path, prompt, 1, 99, 3)
 
 
 image1_path = r"C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\%s_result.jpg"
 prompt = "Going down a subrbian leavy empty road"
-recursive_predict(image1_path, prompt, 300, 500, 6)
+recursive_predict(image1_path, prompt, 300, 500, 3)
 
 
 assert 1 == 2

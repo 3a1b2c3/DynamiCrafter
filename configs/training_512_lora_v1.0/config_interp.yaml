@@ -1,6 +1,6 @@
 model:
   pretrained_checkpoint: C:\workspace\cs231n\proj\DynamiCrafterLora\checkpoints\dynamicrafter_512_interp_v1\model_train.ckpt
-  lora_path: C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\epoch=2-step=45.ckpt
+  lora_path: C:\workspace\cs231n\proj\DynamiCrafterLora\main\logs\test\checkpoints\epoch=2-step=39.ckpt
   base_learning_rate: 1.0e-05
   scale_lr: False
   target: lvdm.models.ddpm3d.LatentVisualDiffusion
@@ -119,8 +119,8 @@ data:
     train:
       target: lvdm.data.webvid.WebVid
       params:
-        data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving
-        meta_path: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving.csv
+        data_dir: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation
+        meta_path: C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation.csv
         video_length: 16
         frame_stride: 6
         load_raw_resolution: true

@@ -306,11 +306,12 @@ ffmpeg -i  C:\workspace\cs231n\proj\data\comma2k19\Chunk_1\Chunk_1\b0c9d2329ad16
 C:\workspace\cs231n\proj\data\comma2k19\Chunk_1\Chunk_1\b0c9d2329ad1606b_2018-08-17--14-55-39\8
 
 # Evaluation test set
-## 10 fps  leafy backlane 
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_170\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\10.mp4" 
+## 10 fps  outdoor shopping
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_689\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\10.mp4" 
 
 ## 10 fps   street with  shops and signs
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_771\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\11.mp4"
+ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\stuttgart.txt" -filter:v fps=10   stuttgart.mp4 #-c copy 
 
 ## 10 fps  people walking street with shops
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\val\clip_689\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving_validation\videos\0-1000\12.mp4"
