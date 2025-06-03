@@ -13,7 +13,7 @@ import numpy as np
 def load_video_to_numpy(path, resize=None, max_frames=None):
     cap = cv2.VideoCapture(path)
     frames = []
-    print("cap.isOpened():", cap.isOpened())
+    print("____cap.isOpened():", cap.isOpened(), path)
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -49,23 +49,65 @@ device = torch.device("cuda")
 # calculate_fvd(videos1, videos2, only_final=True)
 # output:
 # [fvd-tensorflow] [151.39244]
-#For pixel value: Make sure the pixel value of videos should be in [0, 1]
-
+# For pixel value: Make sure the pixel value of videos should be in [0, 1]
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafter\output\50samples\slowly_going_down_the_street.mp4"
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafter\output\150samples\slowly_going_down_the_street.mp4"
+''' 
 v1 = r"C:\workspace\cs231n\proj\DynamiCrafter\output\50samples\slowly_going_down_the_street.mp4"
 v2 = r"C:\workspace\cs231n\proj\DynamiCrafter\output\150samples\slowly_going_down_the_street.mp4"
 v3 = r"C:\workspace\cs231n\proj\DynamiCrafter\output\eta0.5\slowly_going_down_the_street.mp4"
-v2 =v3
-videos1t = load_video_to_numpy(v1, resize=None, max_frames=None) / 255
-#x = x.permute(0, 2, 1, 3, 4)
-videos1 = torch.from_numpy(np.transpose(videos1t, (0, 3, 1, 2)) ).float()
-videos1= videos1.unsqueeze(0)
+v2 = v3
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\backstreet_582\
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafter\output\150samples\slowly_going_down_the_street.mp4"
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafter\output\150samples\slowly_going_down_the_street.mp4"
+#ffmpeg.exe -i  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001no_lora_.a_train_rides_on_the_si.mp4" -lavfi psnr=stats_file=psnr_logfile.txt -f null -  #PSNR y:17.419270
+#ffmpeg.exe -i  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001lora_.a_train_rides_on_the_side_.mp4" -lavfi psnr=stats_file=psnr_logfile.txt -f null - # PSNR y:17.178489 
+'''
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001no_lora_.a_train_rides_on_the_si.mp4"
+v2a = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001lora_.a_train_rides_on_the_side_.mp4"
 
-videos2t = load_video_to_numpy(v2, resize=None, max_frames=None)  / 255 # (torch.cuda.FloatTensor)
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061lora_.a_backlane_with_restaurant.mp4" 
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061no_lora_.a_backlane_with_restaur.mp4"
+
+ 
+#-filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_diff_no_lora_lora.mp4"
+
+v1 =r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_73.mp4"
+v2 =r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073no_lora_.driving_around_Malaga.mp4" 
+#v2 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073lora_.driving_around_Malaga.mp4" 
+
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal\TEST\coma_ground_73.mp4"
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal\TEST\6_st_001lora_.driving_off_from_a_crossin.mp4"
+#v2 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal\TEST\6_st_001no_lora_.driving_off_from_a_cros.mp4"
+
+#ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal_28\TEST\%03d_result.jpg" -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal_28\TEST\coma_28_ground_1.mp4"
+#ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal_28\TEST\6_st_001lora_.driving_fast_on_highway_in.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal_28\TEST\6_st_001no_lora_.driving_fast_on_highway.mp4"   
+
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\Test\6_st_126no_lora_.Going_down_a_suburbian_.mp4" 
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\Test\6_st_120lora_.Going_down_a_suburbian_lea.mp4"  # -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\TEST\driving_diff_28_no_lora_lora.mp4"
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\TEST\Kitti_driving_ground_120.mp4" 
+#-i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\Test\6_st_126no_lora_.Going_down_a_suburbian_.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\TEST\drivingd_no_lora_lora.mp4"
+v1 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\5_st_001lora_.discovering_Tokyo_backlane.mp4" 
+#-i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\5_st_001no_lora_.discovering_Tokyo_backl.mp4"   -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\582_TITAN_no_lora_lora.mp4"
+v2 = r"C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\582_TITAN_ground1.mp4" 
+
+# -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_61frames.mp
+videos1t = load_video_to_numpy(v1, resize=None, max_frames=None) / 255
+# x = x.permute(0, 2, 1, 3, 4)
+videos1 = torch.from_numpy(np.transpose(videos1t, (0, 3, 1, 2))).float()
+videos1 = videos1.unsqueeze(0)
+
+videos2t = (
+    load_video_to_numpy(v2, resize=None, max_frames=None) / 255
+)  # (torch.cuda.FloatTensor)
 videos2 = torch.from_numpy(np.transpose(videos2t, (0, 3, 1, 2))).float()
-videos2 = videos2.unsqueeze(0) # 
-#print(videos2)
-print("videos1.shape", videos1.shape, "videos1a.shape", videos1a.shape, videos2.shape)  # (num_frames, height, width, 3)
-#videos1.shape torch.Size([16, 3, 320, 512]) torch.Size([8, 30, 3, 64, 64])#
+videos2 = videos2.unsqueeze(0)  #
+# print(videos2)
+print(
+    "videos1.shape", videos1.shape, "videos1a.shape", videos1a.shape, videos2.shape
+)  # (num_frames, height, width, 3)
+# videos1.shape torch.Size([16, 3, 320, 512]) torch.Size([8, 30, 3, 64, 64])#
 # ps: pixel value should be in [0, 1]!
 # video_np = video_np.transpose(0, 2, 3, 1)
 
