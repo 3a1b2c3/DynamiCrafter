@@ -1,3 +1,12 @@
+#comma
+ffmpeg -i C:\workspace\cs231n\proj\data\comma2k19\VAL\11\video.hevc  -vf fps=10 C:\workspace\cs231n\proj\data\comma2k19\VAL\11\img\frame_%05d.png
+
+ffmpeg -i "C:\workspace\cs231n\proj\data\comma2k19\VAL\11\320\%03d_result.jpg" -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\cal\TEST\coma_ground_73.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073no_lora_.driving_around_Malaga.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073lora_.driving_around_Malaga.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_diff_no_lora_lora.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_73.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073no_lora_.driving_around_Malaga.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_no_lora_lora.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_73.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073lora_.driving_around_Malaga.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_diff_no_lora_lora.mp4"
+
+
 # shpoppers
 
 ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\shoppers\1\stuttgart.txt" -filter:v fps=10  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\shoppers\1\lora.mp4" #-c copy 
@@ -5,23 +14,42 @@ ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_re
 
 # ____________malaga
 C:\workspace\cs231n\proj\data\malaga-urban-dataset-extract-04\TEST\malaga-urban-dataset-extract-06\malaga-urban-dataset-extract-06\l\
+12_st_073lora_.driving_around_Malaga.mp4
 
-file C:/workspace/cs231n/proj/DynamiCrafterLora/output/out/malaga/no/12_st_001lora_.driving_around_empty_Mala.mp4
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\320\%03d_result.jpg" -filter_complex "minterpolate=fps=35:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_73.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073no_lora_.driving_around_Malaga.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073lora_.driving_around_Malaga.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_diff_no_lora_lora.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_73.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073no_lora_.driving_around_Malaga.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_no_lora_lora.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_ground_73.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\12_st_073lora_.driving_around_Malaga.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\TEST\malaga_diff_no_lora_lora.mp4"
+=====
+
+
 ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\lora\stuttgart.txt" -filter:v fps=20   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\lora.mp4" #-c copy 
 #C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\no
 ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\no_lora\stuttgart.txt" -filter:v fps=20  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\no_lora.mp4" #-c copy 
-ffmpeg -i "C:\workspace\cs231n\proj\data\malaga-urban-dataset-extract-04\TEST\malaga-urban-dataset-extract-06\malaga-urban-dataset-extract-06\l\%03d_result.jpg" -filter:v fps=20 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\ground.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\data\malaga-urban-dataset-extract-04\TEST\malaga-urban-dataset-extract-06\malaga-urban-dataset-extract-06\l\%03d_result.jpg" -filter_complex "minterpolate=fps=35:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\malaga\ground.mp4"
 
 ffmpeg -i C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\lora_new\6_st_001lora_.a_train_rides_on_the_side_.mp4 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\no_lora_new\6_st_001no_lora_.a_train_rides_on_the_si.mp4" -sar 1:1 -filter_complex "[0:v][1:v]blend=all_mode=difference" -c:v libx264 -crf 18  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\diff_no_lora_lora1.mp4"
 
 # ____________ white van 582  # ____________ backlane 11s 582 -vframes 13 white truck
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\TEST\582_ground.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg" -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\TEST\582_ground.mp4"
 ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\lora\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\TEST\582_lora.mp4"
 fmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\no\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\TEST\582_no_lora.mp4"
 # 5, fr 31 C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\320\
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg" -vframes 13 -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\TEST\582_ground.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg" -vframes 13  -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\TEST\582_ground.mp4"
 # ground
-ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\320\%03d_result.jpg"  -vframes 16 -filter_complex "minterpolate=fps=70:mi_mode=mci"  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\528_ground_31_16frames_interp.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\320\%03d_result.jpg"   -filter_complex "minterpolate=fps=70:mi_mode=mci" -filter_complex "minterpolate=fps=70:mi_mode=mci"  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\528_ground_31_16frames_interp.mp4"
+
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001no_lora_.a_train_rides_on_the_si.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001lora_.a_train_rides_on_the_side_.mp4"   -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_diff_no_lora_lora.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001no_lora_.a_train_rides_on_the_si.mp4" -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_diff_ground_no_lora.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001lora_.a_train_rides_on_the_side_.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_diff_ground_lora.mp4"
+
+ffmpeg.exe -i  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001no_lora_.a_train_rides_on_the_si.mp4" -lavfi psnr=stats_file=psnr_logfile.txt -f null -  #y:18.109032
+ffmpeg.exe -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001no_lora_.a_train_rides_on_the_si.mp4" -lavfi ssim=stats_file=ssim_logfile.txt -f null - # Y:SSIM Y:0.532539
+
+ffmpeg.exe -i  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001lora_.a_train_rides_on_the_side_.mp4" -lavfi psnr=stats_file=psnr_logfile.txt -f null - #  17.801615 
+ffmpeg.exe -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_55_16frames_interp.mp4"  -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\6_st_001lora_.a_train_rides_on_the_side_.mp4" -lavfi ssim=stats_file=ssim_logfile.txt -f null - # 0.533075 
+
+
 
 # C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST
 ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\528_ground_31_16frames_interp.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\5_st_031lora_.discovering_Tokyo_backlane.mp4"  -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\582_diff_ground_lora.mp4"
@@ -30,7 +58,7 @@ ffmpeg.exe -i  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\tra
 
 
 
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg" -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\backstreet_582\582_ground.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg"  -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\backstreet_582\582_ground.mp4"
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg" -filter:v fps=10 -t 11 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\backstreet_582\582_ground_11.mp4"
 ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_582\images\%03d_result.jpg" -vf "minterpolate=fps=10" -t 11 -r 11 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\backstreet_582\582_ground_minter_11.mp4"
 #If your original video is 270 frames at 10 fps (27s), then:
@@ -49,36 +77,35 @@ ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\backstreet_582\582_
 # restaurant
 
 # ____________ restaurant 11s 537
-ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%03d_result.jpg"  -vframes 16 -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\537_ground.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%03d_result.jpg" -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\537_ground.mp4"
 ffmpeg -start_number 61 -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%03d_result.jpg" -vframes 7 -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_7frames.mp4"
 ffmpeg -start_number 61 -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%03d_result.jpg" -vframes 7 -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_7frames.mp4"
 ffmpeg -start_number 61 -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_537\images\%03d_result.jpg" -vframes 7 -filter:v "minterpolate=fps=10" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_7frames_interp.mp4"
 
 ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\lora\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\lora.mp4"
 ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\lora\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\no_lora.mp4"
-# 5
-ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\lora\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\lora.mp4"
-ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\no\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\whiteTruckbarrels_582\5\TEST\no_lora.mp4"
-
-
+#GROUND
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\320\%03d_result.jpg" -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_61frames.mp4"
 
 # C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST
-537_ground_7frames_interp.mp4
+537_ground_61frames.mp4"
 6_st_061lora_.a_backlane_with_restaurant.mp4
 6_st_061no_lora_.a_backlane_with_restaur.mp4
-
-
-ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061lora_.a_backlane_with_restaurant.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061no_lora_.a_backlane_with_restaur.mp4"   -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\diff_no_lora_lora1.mp4"
-ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061no_lora_.a_backlane_with_restaur.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_7frames_interp.mp4"  -filter_complex "[0:v]scale=512:350,setsar=1:1[v0]; [1:v]scale=512:350,setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\base_no_lora_lora1.mp4"
-ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061lora_.a_backlane_with_restaurant.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_7frames_interp.mp4"  -filter_complex "[0:v]scale=512:350,setsar=1:1[v0]; [1:v]scale=512:350,setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\base_lora_lora1.mp4"
+#
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061lora_.a_backlane_with_restaurant.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_61frames.mp4"   -filter_complex "[0:v]setsar=1:1[v0]; [1:v]setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\diff_no_lora_lora1.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061lora_.a_backlane_with_restaurant.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_61frames.mp4"  -filter_complex "[0:v]scale=512:350,setsar=1:1[v0]; [1:v]scale=512:350,setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\base_lora_lora1.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\6_st_061no_lora_.a_backlane_with_restaur.mp4" -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\537_ground_61frames.mp4"  -filter_complex "[0:v]scale=512:350,setsar=1:1[v0]; [1:v]scale=512:350,setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\restaurant\TEST\base_no_lora_lora1.mp4"
 ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi psnr=stats_file=psnr_logfile.txt -f null -
 ffmpeg.exe -i videoToCompare.mp4 -i originalVideo.mp4 -lavfi ssim=stats_file=ssim_logfile.txt -f null
 
 # ____________suburbia
+3 192
+C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\Test\320\
+
 ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\lora\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\582_lora.mp4" #-c copy 
 ffmpeg  -start_number 1 -i "C:\workspace\cs231n\proj\data\kitti\videos\TRAIN\2011_09_26\2011_09_26_drive_0002_sync\image_03\data\%d_result.jpg" -c:v libx264 -r 10 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\data\driving\videos\0-1000\10.mp4"
 #   120, 300, 51s
-ffmpeg  -start_number 120 -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\%03d_result.jpg" -t 51 -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\ground_51.mp4"
+ffmpeg  -start_number 120 -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0014_sync_follow\2011_09_26\2011_09_26_drive_0014_sync\image_03\data\%03d_result.jpg"  -filter_complex "minterpolate=fps=70:mi_mode=mci"  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\suburbia\TEST\ground_51.mp4"
 
 
 # ____________train 512 x 320 
@@ -109,7 +136,7 @@ ffmpeg -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\t
 # ____________stutt
 ffmpeg 
 -f concat -safe 0 -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\stuttgart_lor.txt" -filter:v fps=10   "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\train_base.mp4" #-c copy 
-ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0001_sync\image_03\data\%03d_result.jpg"  -t 27 -filter:v fps=10 "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\train_ground_27.mp4"
+ffmpeg -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0001_sync\image_03\data\%03d_result.jpg"  -filter_complex "minterpolate=fps=70:mi_mode=mci" "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\TEST\train_ground_27.mp4"
 ffmpeg -i stuttgart_ground.mp4 -i stuttgart_trimmed.mp4 -sar 1:1 -filter_complex "[0:v][1:v]blend=all_mode=difference" -c:v libx264 -crf 18  stuttgart_diff.mp4
 
 ffmpeg -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\train_lora.mp4"    -i "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\train_nolora.mp4"   -filter_complex "[0:v]scale=512:350,setsar=1:1[v0]; [1:v]scale=512:350,setsar=1:1[v1]; [v0][v1]blend=all_mode=difference,format=gray"      -c:v libx264 -crf 18 -pix_fmt yuv420p "C:\workspace\cs231n\proj\DynamiCrafterLora\output\train\diff_no_lora_lora1.mp4"
@@ -159,6 +186,7 @@ r"C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\020_result.jpg"
 
 ffmpeg -start_number 19 -i "C:\workspace\cs231n\proj\data\kitti\TEST\2011_09_26_drive_0106_sync\2011_09_26_rad\2011_09_26_drive_0106_sync_red_flying_cam_pedestrinas\image_03\data\%03d_result.jpg"  -filter:v "setpts=(18/3)*PTS" -t 18 "stuttgart_ground.mp4"
 ffmpeg -start_number 13 -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\%03d_result.jpg" -filter:v "setpts=(19/3)*PTS"  -t 19 "tokyo_ground.mp4"
+ffmpeg -start_number 13 -i "C:\workspace\cs231n\proj\data\titan_data\TEST\clip_486\images\%03d_result.jpg" -filter_complex "minterpolate=fps=70:mi_mode=mci"  "C:\workspace\cs231n\proj\DynamiCrafterLora\output\tokyo\TEST\tokyo_ground.mp4"
 
 
 #ffmpeg -f concat -i videos.txt -c copy output8.mp4
