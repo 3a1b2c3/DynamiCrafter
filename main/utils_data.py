@@ -42,7 +42,7 @@ class WrappedDataset(Dataset):
 
 
 class DataModuleFromConfig(pl.LightningDataModule):
-    def __init__(self, batch_size, train=None, validation=None, test=None, predict=None,
+    def __init__(self, batch_size, train=True, validation=None, test=None, predict=None, # config
                  wrap=False, num_workers=None, shuffle_test_loader=False, use_worker_init_fn=False,
                  shuffle_val_dataloader=False, train_img=None,
                  test_max_n_samples=None):
@@ -63,7 +63,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
         if predict is not None:
             self.dataset_configs["predict"] = predict
             self.predict_dataloader = self._predict_dataloader
-
+        print("(validation, train, test", validation, train, test, self.val_dataloader)
         self.img_loader = None
         self.wrap = wrap
         self.test_max_n_samples = test_max_n_samples
@@ -74,6 +74,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
 
     def setup(self, stage=None):
         self.datasets = dict((k, instantiate_from_config(self.dataset_configs[k])) for k in self.dataset_configs)
+        print(self.datasets.keys(), self.datasets)
         if self.wrap:
             for k in self.datasets:
                 self.datasets[k] = WrappedDataset(self.datasets[k])
@@ -91,6 +92,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
         return loader
 
     def _val_dataloader(self, shuffle=False):
+        print("self.datasets.keys(0)", self.datasets.keys())
         if isinstance(self.datasets['validation'], Txt2ImgIterableBaseDataset) or self.use_worker_init_fn:
             init_fn = worker_init_fn
         else:
@@ -102,6 +104,10 @@ class DataModuleFromConfig(pl.LightningDataModule):
                           shuffle=shuffle, 
                           collate_fn=self.collate_fn,
                           )
+
+    def val_dataloader(self, shuffle=False):
+        # TODO
+        return self._train_dataloader()# self._val_dataloader(shuffle)
 
     def _test_dataloader(self, shuffle=False):
         try:
@@ -124,6 +130,8 @@ class DataModuleFromConfig(pl.LightningDataModule):
                           num_workers=self.num_workers, worker_init_fn=init_fn, shuffle=shuffle,
                           collate_fn=self.collate_fn,
                           )
+    def test_dataloader(self, shuffle=False):
+       return self._test_dataloader(shuffle)
 
     def _predict_dataloader(self, shuffle=False):
         if isinstance(self.datasets['predict'], Txt2ImgIterableBaseDataset) or self.use_worker_init_fn:
